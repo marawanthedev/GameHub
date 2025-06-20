@@ -14,7 +14,7 @@ const inter = Inter({
 
 
 export const metadata = {
-  title: 'GameStore',
+  title: 'GameHub - Premium Game Store',
   description: 'Premium Game Store',
 }
 
