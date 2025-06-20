@@ -55,7 +55,7 @@ export default function CheckoutPage() {
                                 ))
                                 : cartItems.map((item) => (
                                     <div key={item.id} className="flex items-center gap-4">
-                                        <Image
+                                        <img
                                             src={item.image}
                                             alt={item.title}
                                             width={80}
