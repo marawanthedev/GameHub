@@ -2,100 +2,59 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="min-h-screen bg-[#0d1117] text-white font-sans px-4 pt-16 pb-20">
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto text-center py-20">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-6">Discover and Buy the Best Games</h1>
+        <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
+          Explore a curated collection of top-tier games. Track your favorites, compare platforms, and check out securely.
+        </p>
+        <a
+          href="/games"
+          className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Browse Games
+        </a>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Game Slider */}
+      <section className="max-w-7xl mx-auto mt-10">
+        <h2 className="text-2xl font-semibold mb-4">Featured Games</h2>
+        <div className="overflow-x-auto flex space-x-6 pb-4">
+          {[1, 2, 3, 4].map((id) => (
+            <div className="relative bg-[#161b22] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300 group">
+              {/* Image with aspect ratio */}
+              <div className="aspect-w-16 aspect-h-9">
+                <img
+                  src="https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg"
+                  alt="Cyberpunk 2077"
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+
+              {/* Overlay details */}
+              <div className="p-4 space-y-2">
+                <h3 className="text-white text-lg font-semibold">Cyberpunk 2077</h3>
+                <p className="text-sm text-gray-400">RPG, Action</p>
+
+                {/* Platform tags */}
+                <div className="flex gap-2 flex-wrap mt-2">
+                  {['PC', 'PS5', 'Xbox'].map((platform) => (
+                    <span
+                      key={platform}
+                      className="bg-[#30363d] text-white text-xs px-2 py-1 rounded-full"
+                    >
+                      {platform}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+    </main>
+
   );
 }

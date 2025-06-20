@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function GamesListPage() {
@@ -17,7 +18,6 @@ export default function GamesListPage() {
             id: 2,
             title: 'The Witcher 3: Wild Hunt',
             image: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg',
-
             genres: ['RPG', 'Fantasy'],
             platforms: ['PC', 'Switch'],
         },
@@ -31,25 +31,23 @@ export default function GamesListPage() {
     ]
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 2000)
+        const timer = setTimeout(() => setLoading(false), 1500)
         return () => clearTimeout(timer)
     }, [])
 
     return (
-        <div className="min-h-screen bg-[#f5f6f8] px-4 py-8">
+        <div className="min-h-screen bg-[#0d1117] text-white px-4 py-8">
             <div className="max-w-7xl mx-auto">
-                <h1 className="text-3xl sm:text-4xl font-bold text-[#1b1f23] mb-6">
-                    Discover Games
-                </h1>
+                <h1 className="text-3xl sm:text-4xl font-bold mb-6">Discover Games</h1>
 
                 {/* Filters */}
-                <div className="mb-8 flex flex-wrap gap-4 text-black">
+                <div className="mb-8 flex flex-wrap gap-4">
                     <input
                         type="text"
                         placeholder="Search games..."
-                        className="px-4 py-2 rounded-lg border border-gray-300 w-full sm:w-72 focus:ring-blue-500 focus:border-blue-500"
+                        className="px-4 py-2 rounded-lg border border-[#30363d] bg-[#161b22] text-white w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    <select className="px-4 py-2 rounded-lg border border-gray-300 w-full sm:w-48 focus:ring-blue-500 focus:border-blue-500">
+                    <select className="px-4 py-2 rounded-lg border border-[#30363d] bg-[#161b22] text-white w-full sm:w-48 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option>All Platforms</option>
                         <option>PC</option>
                         <option>PlayStation</option>
@@ -63,24 +61,26 @@ export default function GamesListPage() {
                         ? Array.from({ length: 6 }).map((_, index) => (
                             <div
                                 key={index}
-                                className="bg-white rounded-2xl shadow overflow-hidden animate-pulse"
+                                className="bg-[#161b22] border border-[#30363d] rounded-2xl shadow animate-pulse overflow-hidden"
                             >
-                                <div className="w-full h-48 bg-gray-300" />
+                                <div className="w-full h-48 bg-[#21262d]" />
                                 <div className="p-4 space-y-3">
-                                    <div className="h-5 w-3/4 bg-gray-300 rounded" />
-                                    <div className="h-4 w-1/2 bg-gray-300 rounded" />
+                                    <div className="h-5 w-3/4 bg-[#21262d] rounded" />
+                                    <div className="h-4 w-1/2 bg-[#21262d] rounded" />
                                     <div className="flex gap-2">
-                                        <div className="h-4 w-16 bg-gray-300 rounded-full" />
-                                        <div className="h-4 w-16 bg-gray-300 rounded-full" />
+                                        <div className="h-4 w-16 bg-[#21262d] rounded-full" />
+                                        <div className="h-4 w-16 bg-[#21262d] rounded-full" />
                                     </div>
-                                    <div className="h-10 w-full bg-gray-300 rounded-lg mt-4" />
+                                    <div className="h-10 w-full bg-[#30363d] rounded-lg mt-4" />
                                 </div>
                             </div>
                         ))
                         : games.map((game) => (
-                            <div
+                            <Link
                                 key={game.id}
-                                className="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden"
+                                href={`/games/${game.id}`}
+                                className="bg-[#161b22] border border-[#30363d] rounded-2xl shadow hover:shadow-lg transition overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                aria-label={`View details for ${game.title}`}
                             >
                                 <img
                                     src={game.image}
@@ -88,17 +88,15 @@ export default function GamesListPage() {
                                     className="w-full h-48 object-cover"
                                 />
                                 <div className="p-4 space-y-2">
-                                    <h2 className="text-xl font-semibold text-[#1b1f23]">
-                                        {game.title}
-                                    </h2>
-                                    <p className="text-sm text-gray-500">
+                                    <h2 className="text-xl font-semibold">{game.title}</h2>
+                                    <p className="text-sm text-gray-400">
                                         {game.genres.join(', ')}
                                     </p>
                                     <div className="flex flex-wrap gap-2 mt-2">
                                         {game.platforms.map((platform) => (
                                             <span
                                                 key={platform}
-                                                className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full"
+                                                className="text-xs bg-blue-900 text-blue-300 px-2 py-1 rounded-full"
                                             >
                                                 {platform}
                                             </span>
@@ -111,7 +109,7 @@ export default function GamesListPage() {
                                         View Details
                                     </button>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                 </div>
             </div>
