@@ -22,12 +22,14 @@ export default function Home() {
         <h2 className="text-2xl font-semibold mb-4">Featured Games</h2>
         <div className="overflow-x-auto flex space-x-6 pb-4">
           {[1, 2, 3, 4].map((id) => (
-            <div className="relative bg-[#161b22] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300 group">
+            <div key={id} className="relative bg-[#161b22] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300 group">
               {/* Image with aspect ratio */}
               <div className="aspect-w-16 aspect-h-9">
-                <img
+                <Image
                   src="https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg"
                   alt="Cyberpunk 2077"
+                  width={300}
+                  height={169}
                   className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                 />
               </div>

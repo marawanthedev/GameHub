@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
@@ -8,20 +8,22 @@ export default function CheckoutPage() {
     const [loading, setLoading] = useState(true)
     const router = useRouter()
 
-    const cartItems: any[] = [
-        {
-            id: 1,
-            title: 'Elden Ring',
-            price: 59.99,
-            image: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg',
-        },
-        {
-            id: 2,
-            title: 'Cyberpunk 2077',
-            price: 49.99,
-            image: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg',
-        },
-    ]
+    const cartItems: { id: number, title: string, price: number, image: string }[] = useMemo(() => {
+        return [
+            {
+                id: 1,
+                title: 'Elden Ring',
+                price: 59.99,
+                image: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg',
+            },
+            {
+                id: 2,
+                title: 'Cyberpunk 2077',
+                price: 49.99,
+                image: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg',
+            },
+        ]
+    }, [])
 
     const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0)
 
@@ -55,7 +57,7 @@ export default function CheckoutPage() {
                                 ))
                                 : cartItems.map((item) => (
                                     <div key={item.id} className="flex items-center gap-4">
-                                        <img
+                                        <Image
                                             src={item.image}
                                             alt={item.title}
                                             width={80}

@@ -40,7 +40,7 @@ export const signupAction = async (formData: FormData): Promise<ActionResponse> 
         return { success: true, message: "Signedup successfully" };
     }
     catch (error) {
-        return { success: false, message: 'An unexpected error occurred', error: 'An unexpected error occurred' }
+        return { success: false, message: 'An unexpected error occurred', error: (error as Error).message }
     }
 
 }

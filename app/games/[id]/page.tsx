@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 export default function GameDetailsPage() {
@@ -44,9 +45,11 @@ export default function GameDetailsPage() {
         <div className="min-h-screen bg-[#0d1117] text-white">
             {/* Hero Section */}
             <div className="relative h-screen w-full overflow-hidden">
-                <img
+                <Image
                     src={game.image}
                     alt={game.title}
+                    width={1920}
+                    height={1080}
                     className="absolute inset-0 w-full h-full object-cover brightness-[0.3]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-[#0d1117]/10" />

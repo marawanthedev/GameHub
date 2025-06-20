@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -49,9 +50,11 @@ export default function CartPage() {
                             ))
                             : cartItems.map((item) => (
                                 <div key={item.id} className="flex items-center gap-6 border-b border-gray-800 pb-6">
-                                    <img
+                                    <Image
                                         src={item.image}
                                         alt={item.title}
+                                        width={96}
+                                        height={96}
                                         className="w-24 h-24 object-cover rounded-xl"
                                     />
                                     <div className="flex-1">

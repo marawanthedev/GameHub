@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -82,9 +83,11 @@ export default function GamesListPage() {
                                 className="bg-[#161b22] border border-[#30363d] rounded-2xl shadow hover:shadow-lg transition overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 aria-label={`View details for ${game.title}`}
                             >
-                                <img
+                                <Image
                                     src={game.image}
                                     alt={game.title}
+                                    width={400}
+                                    height={300}
                                     className="w-full h-48 object-cover"
                                 />
                                 <div className="p-4 space-y-2">

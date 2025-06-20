@@ -30,6 +30,6 @@ export const loginAction = async (formData: FormData): Promise<{ success: boolea
 
         return { success: true, message: "Logged in successfully" };
     } catch (error) {
-        return { success: false, message: 'An unexpected error occurred', error: 'An unexpected error occurred' };
+        return { success: false, message: 'An unexpected error occurred', error: (error as Error).message };
     }
 }

@@ -3,12 +3,13 @@
 import { useFormState } from 'react-dom'
 import { useEffect, useState } from 'react'
 import { loginAction } from './actions'
+import { ActionResponse } from '../types/action'
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(true)
-    const [state, formAction] = useFormState<any, FormData>(
-        loginAction,
-        { errors: {} }
+    const [state, formAction] = useFormState<ActionResponse, FormData>(
+        (_prevState, formData) => loginAction(formData),
+        { success: false, message: '' }
     )
 
     useEffect(() => {
