@@ -1,25 +1,28 @@
 import { supabase } from "./supabase/client";
-// { email: string, password: string, id: string }
-export const getUserByEmail = async (email: string): Promise<null | any> => {
 
+type User = {
+    id: string;
+    email: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export const getUserByEmail = async (email: string): Promise<User | null> => {
     try {
         const { data, error } = await supabase
-            .from('users') // ← This does NOT work for auth users
-            .select("id,email,created_at,updated_at")
+            .from('users') // Note: this must be a public user table, not the auth.users table
+            .select("id, email, created_at, updated_at")
             .eq('email', email)
+            .single(); // Use .single() if you expect one result
 
-
-        if (!data || data.length === 0) {
-            return null
+        if (error) {
+            console.error("Supabase error:", error.message);
+            return null;
         }
 
-        if (!error) {
-            return null
-        }
-
-        return data;
+        return data ?? null;
     } catch (e) {
-        console.error(e)
-        return null
+        console.error("Unexpected error:", e);
+        return null;
     }
-}
+};

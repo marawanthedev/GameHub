@@ -4,7 +4,7 @@ export default function ConfirmEmailPage() {
             <div className="max-w-md w-full bg-[#161b22] shadow-xl rounded-2xl p-8 space-y-6 border border-[#30363d] text-center">
                 <h1 className="text-2xl font-bold text-blue-400">Confirm your email</h1>
                 <p className="text-gray-400 text-sm">
-                    We've sent a confirmation link to your email. Please check your inbox and follow the link to complete your registration.
+                    We&apos;ve sent a confirmation link to your email. Please check your inbox and follow the link to complete your registration.
                 </p>
                 <a
                     href="/"

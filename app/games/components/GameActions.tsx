@@ -1,7 +1,6 @@
-import { useDebounce } from "@/app/hooks/useThrottle"
 import rawg from "@/app/lib/rawg"
 import { RawgPlatform } from "@/app/types/rawg"
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query"
+import { useSuspenseQuery } from "@tanstack/react-query"
 
 
 const fetchPlatforms = async (): Promise<RawgPlatform[]> => {

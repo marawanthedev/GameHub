@@ -78,7 +78,7 @@ export default function GamesList({ selectedPlatformId, searchQuery }: { selecte
 
         observer.observe(loadMoreRef.current);
         return () => observer.disconnect();
-    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage, debouncedFetchNextPage]);
 
 
 
