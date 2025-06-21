@@ -1,35 +1,47 @@
 
 
 
-import { Suspense } from 'react'
-import GamesList from './components/list'
-import GamesListSkeleton from './components/skeleton'
+"use client"
+import React, { Suspense, useDeferredValue, useEffect, useState } from 'react'
+import GamesList from './components/GameList'
+import GamesListSkeleton from './components/GameListSkeleton'
+import GameActions from './components/GameActions'
+import GameActionsSkeleton from './components/GameActionSkeleton'
+
+
+const MemoizedGamesList = React.memo(GamesList);
 
 export default function GamesPage() {
+    const [selectedPlatformId, setSelectedPlatformId] = useState<string>("all")
+    const [searchQuery, setSearchQuery] = useState<string>("")
+
+    const deferredSearchQuery = useDeferredValue(searchQuery);
+
+    // get platforms
+    // get games
+    // get paginated games
+    // get paginated games with platform
+    // search games, debounced 
+
+    useEffect(() => {
+        console.log('searchQuery changed:', searchQuery);
+    }, [searchQuery])
+
+
     return (
         <div className="min-h-screen bg-[#0d1117] text-white px-4 py-8">
             <div className="max-w-7xl mx-auto">
                 <h1 className="text-3xl sm:text-4xl font-bold mb-6">Discover Games</h1>
 
                 {/* Filters */}
-                <div className="mb-8 flex flex-wrap gap-4">
-                    <input
-                        type="text"
-                        placeholder="Search games..."
-                        className="px-4 py-2 rounded-lg border border-[#30363d] bg-[#161b22] text-white w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <select className="px-4 py-2 rounded-lg border border-[#30363d] bg-[#161b22] text-white w-full sm:w-48 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>All Platforms</option>
-                        <option>PC</option>
-                        <option>PlayStation</option>
-                        <option>Xbox</option>
-                    </select>
-                </div>
+                <Suspense fallback={<GameActionsSkeleton />}>
+                    <GameActions selectedPlatformId={selectedPlatformId} setSelectedPlatformId={setSelectedPlatformId} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                </Suspense>
 
                 <Suspense fallback={<GamesListSkeleton />}>
-                    <GamesList />
+                    <MemoizedGamesList selectedPlatformId={selectedPlatformId} searchQuery={deferredSearchQuery} />
                 </Suspense>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }

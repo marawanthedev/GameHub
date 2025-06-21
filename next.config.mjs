@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['image.api.playstation.com'],
+        domains: ['media.rawg.io', 'image.api.playstation.com'],
     },
 };
 
