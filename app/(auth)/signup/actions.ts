@@ -1,11 +1,12 @@
 'use server'
 
 import { z } from 'zod'
-import { supabase } from '../lib/supabase/client'
-import { ActionResponse } from "../types/action"
+import { ActionResponse } from "../../types/action"
+import { getUserByEmail } from '../../lib/dal'
+import { supabaseServerAction } from '../../lib/supabase/server'
 
 // Zod schema for validation
-export const signupSchema = z
+const signupSchema = z
     .object({
         email: z.string().email(),
         password: z.string().min(6),
@@ -17,24 +18,27 @@ export const signupSchema = z
     })
 
 
-
-
-
-
 export const signupAction = async (formData: FormData): Promise<ActionResponse> => {
     try {
         const validationOutCome = signupSchema.safeParse(Object.fromEntries(formData))
 
+        const existingUser = await getUserByEmail(formData.get('email') as string)
+
+
+        if (existingUser) {
+            throw new Error('User already exists')
+        }
 
         if (!validationOutCome.success) {
-            return { success: false, errors: validationOutCome.error.flatten().fieldErrors, message: 'Faild To Signup', error: 'Faild to signup' }
+            throw new Error('Failed to validate form data: ' + validationOutCome.error.message)
         }
 
         const { email, password } = validationOutCome.data;
 
-        const { error } = await supabase.auth.signUp({ email, password })
+        const { error } = await supabaseServerAction.auth.signUp({ email, password })
+
         if (error) {
-            return { success: false, message: "Failed to signup", }
+            return { success: false, message: "Failed to signup", error: (error as Error).message }
         }
 
         return { success: true, message: "Signedup successfully" };

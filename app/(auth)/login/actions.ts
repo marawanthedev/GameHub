@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import { supabase } from '../lib/supabase/client'
+import { supabaseServerAction } from '../../lib/supabase/server'
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -23,7 +23,9 @@ export const loginAction = async (formData: FormData): Promise<{ success: boolea
 
         const { email, password } = validationOutcome.data;
 
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+        const { error } = await supabaseServerAction.auth.signInWithPassword({ email, password });
+
         if (error) {
             return { success: false, message: "Failed to login", error: error.message };
         }
