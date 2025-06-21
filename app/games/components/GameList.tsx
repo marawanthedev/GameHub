@@ -1,6 +1,6 @@
 'use client'
 
-import { GameDetail } from '@/app/types/rawg'
+import { GameItem } from '@/app/types/rawg'
 
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { useDebounce } from '@/app/hooks/useThrottle';
@@ -10,7 +10,7 @@ import GameCard from './GameCard'
 
 
 type RawgGamesApiResponse = {
-    results: GameDetail[]
+    results: GameItem[]
     nextPage?: number
     isLastPage?: boolean
 }

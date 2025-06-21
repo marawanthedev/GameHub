@@ -1,53 +1,69 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
+import rawg from '@/app/lib/rawg'
+import { GameDetail } from '@/app/types/rawg'
+import { useCartStore } from '@/app/stores/cart'
+import { DescriptionClamp } from './components/DescriptionClamp'
+import { useState } from 'react'
+import { toast } from 'sonner';
+import { GameDetailsSkeleton } from './components/GameDetailsSkeleton'
 
 export default function GameDetailsPage() {
-    const [loading, setLoading] = useState(true)
+    const [addToCartAnnouncement, setAddToCartAnnouncement] = useState('');
 
-    const game = {
-        id: 1,
-        title: 'Elden Ring',
-        price: 59.99,
-        image:
-            'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg',
-        description:
-            'Elden Ring is an action RPG developed by FromSoftware. Explore a vast, hauntingly beautiful world filled with mystery, danger, and powerful enemies.',
-        genres: ['Action', 'Souls-like', 'RPG'],
-        platforms: ['PC', 'PS5', 'Xbox'],
-    }
+    const { id } = useParams()
+    const addToCart = useCartStore((state) => state.addToCart)
 
-    useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 2000)
-        return () => clearTimeout(timer)
-    }, [])
+    const {
+        data: game,
+        isLoading,
+        error,
+    } = useQuery<GameDetail>({
+        queryKey: ['game', id],
+        queryFn: async () => {
+            const { data } = await rawg.get(`/games/${id}`)
+            return data
+        },
+        enabled: !!id,
+    })
 
-    if (loading) {
+    const handleAddToCart = (game: GameDetail) => {
+        try {
+            addToCart({
+                id: game.id,
+                title: game.name,
+                price: 59.99, // Assuming a fixed price for simplicity
+                image: game.background_image,
+            });
+
+            toast.success(`${game.name} added to cart!`);
+            setAddToCartAnnouncement(`${game.name} has been added to your cart.`);
+        } catch (error) {
+            const message =
+                error instanceof Error ? error.message : 'Something went wrong adding to cart.';
+            toast.error(message);
+        }
+    };
+
+    if (isLoading) {
         return (
-            <div className="min-h-screen animate-pulse bg-[#0d1117] text-white">
-                <div className="relative h-screen bg-[#161b22]" />
-                <div className="max-w-5xl mx-auto px-6 md:px-10 py-16 space-y-10">
-                    <div className="h-6 w-40 bg-[#21262d] rounded" />
-                    <div className="h-4 w-3/4 bg-[#21262d] rounded" />
-                    <div className="h-8 w-24 bg-[#30363d] rounded" />
-                    <div className="flex gap-2 mt-4">
-                        <div className="h-6 w-20 bg-[#21262d] rounded-full" />
-                        <div className="h-6 w-24 bg-[#21262d] rounded-full" />
-                        <div className="h-6 w-16 bg-[#21262d] rounded-full" />
-                    </div>
-                </div>
-            </div>
+            <GameDetailsSkeleton />
         )
     }
 
+    if (!game) throw new Error('Game not found');
+    if (error) throw error;
+
     return (
-        <div className="min-h-screen bg-[#0d1117] text-white">
+        <main className="min-h-screen bg-[#0d1117] text-white">
             {/* Hero Section */}
-            <div className="relative h-screen w-full overflow-hidden">
+            <header className="relative py-12 min-h-screen w-full overflow-hidden">
                 <Image
-                    src={game.image}
-                    alt={game.title}
+                    src={game.background_image}
+                    alt={`Background for ${game.name}`}
                     width={1920}
                     height={1080}
                     className="absolute inset-0 w-full h-full object-cover brightness-[0.3]"
@@ -55,47 +71,66 @@ export default function GameDetailsPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-[#0d1117]/10" />
 
                 <div className="relative z-10 h-full flex items-center justify-start px-6 md:px-20">
-                    <div className="max-w-2xl space-y-6">
-                        <h1 className="text-white text-5xl font-bold">{game.title}</h1>
-                        <p className="text-gray-300 text-lg">{game.description}</p>
-                        <p className="text-3xl font-semibold text-white">${game.price}</p>
-                        <button className="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    <article className="max-w-2xl space-y-6" aria-labelledby="game-title">
+                        <h1 id="game-title" className="text-white text-4xl md:text-5xl font-bold">
+                            {game.name}
+                        </h1>
+
+                        <DescriptionClamp description={game.description_raw} />
+
+                        <p className="text-2xl md:text-3xl font-semibold text-white">$59.99</p>
+
+                        <button
+                            onClick={() =>
+                                handleAddToCart(game)
+                            }
+                            className="mt-4 inline-flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition"
+                            aria-label={`Add ${game.name} to cart`}
+                        >
                             Add to Cart
                         </button>
-                    </div>
+                    </article>
                 </div>
-            </div>
+            </header>
 
             {/* Details Section */}
-            <div className="max-w-5xl mx-auto px-6 md:px-10 py-16 space-y-12">
-                <div>
-                    <h2 className="text-2xl font-semibold mb-2">Genres</h2>
-                    <div className="flex gap-2 flex-wrap">
-                        {game.genres.map((genre) => (
-                            <span
-                                key={genre}
-                                className="text-sm bg-blue-900 text-blue-300 px-3 py-1 rounded-full"
-                            >
-                                {genre}
-                            </span>
-                        ))}
-                    </div>
-                </div>
+            <section className="max-w-5xl mx-auto px-6 md:px-10 py-16 space-y-12" aria-labelledby="details-heading">
+                <h2 id="details-heading" className="sr-only">Game details</h2>
 
-                <div>
-                    <h2 className="text-2xl font-semibold mb-2">Platforms</h2>
-                    <div className="flex gap-2 flex-wrap">
-                        {game.platforms.map((platform) => (
-                            <span
-                                key={platform}
-                                className="text-sm bg-gray-800 text-gray-300 px-3 py-1 rounded-full"
-                            >
-                                {platform}
-                            </span>
+                <section aria-labelledby="genres-heading">
+                    <h3 id="genres-heading" className="text-2xl font-semibold mb-2">Genres</h3>
+                    <ul className="flex gap-2 flex-wrap" aria-label="Genres">
+                        {game.genres.map((genre) => (
+                            <li key={genre.id}>
+                                <span className="text-sm bg-blue-900 text-blue-300 px-3 py-1 rounded-full inline-block">
+                                    {genre.name}
+                                </span>
+                            </li>
                         ))}
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </ul>
+                </section>
+
+                <section aria-labelledby="platforms-heading">
+                    <h3 id="platforms-heading" className="text-2xl font-semibold mb-2">Platforms</h3>
+                    <ul className="flex gap-2 flex-wrap" aria-label="Platforms">
+                        {game.platforms.map(({ platform }) => (
+                            <li key={platform.id}>
+                                <span className="text-sm bg-gray-800 text-gray-300 px-3 py-1 rounded-full inline-block">
+                                    {platform.name}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            </section>
+
+            <span
+                id="cart-announcement"
+                className="sr-only"
+                aria-live="polite"
+            >
+                {addToCartAnnouncement ? addToCartAnnouncement : 'No items added to cart yet.'}
+            </span>
+        </main >
     )
 }

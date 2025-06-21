@@ -4,7 +4,6 @@ import SignUpForm from './components/form'
 import SignUpSkeleton from './components/skeleton'
 
 async function DelayedSignupForm() {
-    // Mimic delay (e.g. fetching user data, session, etc.)
     await new Promise((res) => setTimeout(res, 2000))
     return <SignUpForm />
 }

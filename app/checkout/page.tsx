@@ -1,62 +1,61 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { useCartStore } from '../stores/cart'
+import { toast } from 'sonner'
 
 export default function CheckoutPage() {
     const [loading, setLoading] = useState(true)
+    const [announcement, setAnnouncement] = useState('')
     const router = useRouter()
-
-    const cartItems: { id: number, title: string, price: number, image: string }[] = useMemo(() => {
-        return [
-            {
-                id: 1,
-                title: 'Elden Ring',
-                price: 59.99,
-                image: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg',
-            },
-            {
-                id: 2,
-                title: 'Cyberpunk 2077',
-                price: 49.99,
-                image: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg',
-            },
-        ]
-    }, [])
-
+    const cartItems = useCartStore((state) => state.items)
     const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0)
 
     useEffect(() => {
         if (cartItems.length === 0) {
-            alert('Your cart is empty. Redirecting to games...')
-            router.push('/games')
+            toast.error('Your cart is empty. Please add items before checking out.')
+            setTimeout(() => router.push('/games'), 1500)
         }
 
         const timer = setTimeout(() => setLoading(false), 1500)
         return () => clearTimeout(timer)
     }, [cartItems, router])
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setAnnouncement('Processing payment...')
+
+        setTimeout(() => {
+            setAnnouncement('Payment complete. Thank you for your order!')
+            toast.success('Payment completed successfully!')
+        }, 3000)
+    }
+
     return (
-        <div className="min-h-screen bg-[#0d1117] text-white flex items-center justify-center px-4 py-16">
-            <div className="w-full max-w-5xl bg-[#161b22] rounded-2xl shadow-xl overflow-hidden">
+        <main className="min-h-screen bg-[#0d1117] text-white px-4 py-16">
+            <section className="w-full max-w-5xl mx-auto bg-[#161b22] rounded-2xl shadow-xl overflow-hidden" aria-labelledby="checkout-heading">
+                <h1 id="checkout-heading" className="sr-only">Checkout</h1>
+
                 <div className="grid md:grid-cols-2">
-                    {/* Left - Summary */}
-                    <div className="p-8 border-r border-[#21262d]">
-                        <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
-                        <div className="space-y-5">
+                    {/* Order Summary */}
+                    <article className="p-8 border-r border-[#21262d]" aria-labelledby="summary-heading">
+                        <h2 id="summary-heading" className="text-2xl font-bold mb-6">Order Summary</h2>
+
+                        <ul className="space-y-5">
                             {loading
                                 ? Array.from({ length: 2 }).map((_, i) => (
-                                    <div key={i} className="flex items-center gap-4 animate-pulse">
+                                    <li key={i} className="flex items-center gap-4 animate-pulse">
                                         <div className="w-20 h-20 bg-[#21262d] rounded-lg" />
                                         <div className="flex-1 space-y-2">
                                             <div className="w-3/4 h-4 bg-[#30363d] rounded" />
                                             <div className="w-1/3 h-4 bg-[#21262d] rounded" />
                                         </div>
-                                    </div>
+                                    </li>
                                 ))
                                 : cartItems.map((item) => (
-                                    <div key={item.id} className="flex items-center gap-4">
+                                    <li key={item.id} className="flex items-center gap-4">
                                         <Image
                                             src={item.image}
                                             alt={item.title}
@@ -65,12 +64,12 @@ export default function CheckoutPage() {
                                             className="rounded-lg object-cover w-20 h-20"
                                         />
                                         <div>
-                                            <h4 className="font-semibold">{item.title}</h4>
-                                            <p className="text-gray-400">${item.price.toFixed(2)}</p>
+                                            <h3 className="font-semibold text-base">{item.title}</h3>
+                                            <p className="text-gray-400 text-sm">${item.price.toFixed(2)}</p>
                                         </div>
-                                    </div>
+                                    </li>
                                 ))}
-                        </div>
+                        </ul>
 
                         <div className="border-t border-[#21262d] mt-6 pt-4 space-y-2">
                             <div className="flex justify-between text-gray-400">
@@ -82,30 +81,35 @@ export default function CheckoutPage() {
                                 <span>${subtotal.toFixed(2)}</span>
                             </div>
                         </div>
-                    </div>
+                    </article>
 
-                    {/* Right - Payment */}
-                    <div className="p-8">
-                        <h2 className="text-2xl font-bold mb-6">Payment Info</h2>
-                        <form className="space-y-4">
+                    {/* Payment Info */}
+                    <article className="p-8" aria-labelledby="payment-heading">
+                        <h2 id="payment-heading" className="text-2xl font-bold mb-6">Payment Info</h2>
+
+                        <form className="space-y-4" onSubmit={handleSubmit} aria-describedby="payment-instructions">
+                            <p id="payment-instructions" className="sr-only">Enter your payment details and submit the form.</p>
+
                             <div>
-                                <label htmlFor="name" className="block text-sm font-medium mb-1">
-                                    Full Name
-                                </label>
+                                <label htmlFor="name" className="block text-sm font-medium mb-1">Full Name</label>
                                 <input
                                     id="name"
+                                    name="name"
+                                    required
                                     type="text"
                                     className="w-full px-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="card" className="block text-sm font-medium mb-1">
-                                    Card Number
-                                </label>
+                                <label htmlFor="card" className="block text-sm font-medium mb-1">Card Number</label>
                                 <input
                                     id="card"
+                                    name="card"
                                     type="text"
+                                    required
+                                    inputMode="numeric"
+                                    pattern="[0-9\s]{13,19}"
                                     placeholder="1234 5678 9012 3456"
                                     className="w-full px-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
                                 />
@@ -113,25 +117,29 @@ export default function CheckoutPage() {
 
                             <div className="flex gap-4">
                                 <div className="flex-1">
-                                    <label htmlFor="expiry" className="block text-sm font-medium mb-1">
-                                        Expiry
-                                    </label>
+                                    <label htmlFor="expiry" className="block text-sm font-medium mb-1">Expiry</label>
                                     <input
                                         id="expiry"
+                                        name="expiry"
+                                        required
                                         type="text"
                                         placeholder="MM/YY"
+                                        pattern="\d{2}/\d{2}"
+                                        inputMode="numeric"
                                         className="w-full px-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
                                     />
                                 </div>
 
                                 <div className="flex-1">
-                                    <label htmlFor="cvc" className="block text-sm font-medium mb-1">
-                                        CVC
-                                    </label>
+                                    <label htmlFor="cvc" className="block text-sm font-medium mb-1">CVC</label>
                                     <input
                                         id="cvc"
+                                        name="cvc"
+                                        required
                                         type="text"
                                         placeholder="123"
+                                        pattern="\d{3,4}"
+                                        inputMode="numeric"
                                         className="w-full px-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
                                     />
                                 </div>
@@ -140,13 +148,31 @@ export default function CheckoutPage() {
                             <button
                                 type="submit"
                                 className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                aria-label={`Pay ${subtotal.toFixed(2)} dollars`}
                             >
                                 Pay ${subtotal.toFixed(2)}
                             </button>
                         </form>
-                    </div>
+
+                        <div
+                            role="status"
+                            aria-live="polite"
+                            className="sr-only"
+                        >
+                            {announcement}
+                        </div>
+                    </article>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     )
 }
+
+// export const metadata = {
+//     title: 'Checkout - GameHub',
+//     description: 'Review your cart and complete your purchase securely.',
+//     robots: {
+//         index: false,
+//         follow: false,
+//     },
+// };

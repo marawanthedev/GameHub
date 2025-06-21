@@ -1,7 +1,7 @@
 // components/GamesListSkeleton.tsx
 export default function GamesListSkeleton() {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-pulse">
+        <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-pulse">
             {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="bg-[#161b22] border border-[#30363d] rounded-2xl shadow p-4 space-y-4">
                     <div className="h-48 bg-[#21262d] rounded" />
@@ -13,6 +13,6 @@ export default function GamesListSkeleton() {
                     </div>
                 </div>
             ))}
-        </div>
+        </main>
     )
 }

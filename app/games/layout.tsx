@@ -1,15 +1,18 @@
-// app/games/layout.tsx
-'use client'
+import type { Metadata } from 'next'
+import GamesClientLayout from './client-layout'
 
-import { ReactNode, useState } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+export const metadata: Metadata = {
+    title: 'Games - GameHub',
+    description: 'Explore our premium collection of video games. Filter by platform, genre, and more.',
+    openGraph: {
+        title: 'Games - GameHub',
+        description: 'Browse and discover premium video games from various platforms.',
+        url: 'https://gamehub.marwan-mostafa.com/games',
+        siteName: 'GameHub',
+        type: 'website',
+    },
+}
 
-export default function GamesLayout({ children }: { children: ReactNode }) {
-    const [client] = useState(() => new QueryClient())
-
-    return (
-        <QueryClientProvider client={client}>
-            {children}
-        </QueryClientProvider>
-    )
+export default function GamesLayout({ children }: { children: React.ReactNode }) {
+    return <GamesClientLayout>{children}</GamesClientLayout>
 }

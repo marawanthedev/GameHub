@@ -1,12 +1,11 @@
-// components/NavBarAuthManager.tsx
-import Link from 'next/link'
-import { logoutAction } from '../actions/logout'
-import { ShoppingCart } from 'lucide-react'
-import { supabaseServerAction } from '../lib/supabase/server'
+
+import Link from 'next/link';
+import { logoutAction } from '../actions/logout';
+import { supabaseServerAction } from '../lib/supabase/server';
 
 export default async function NavBarActions() {
     const { data: { session } } = await supabaseServerAction.auth.getSession()
-    const user = session?.user
+    const user = session?.user;
 
     return (
         <div className="flex items-center gap-3">
@@ -37,10 +36,6 @@ export default async function NavBarActions() {
                     </Link>
                 </>
             )}
-
-            <Link href="/cart" className="hover:text-blue-400 transition ml-2">
-                <ShoppingCart className="w-5 h-5" />
-            </Link>
         </div>
-    )
+    );
 }

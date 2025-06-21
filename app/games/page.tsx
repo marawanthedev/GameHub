@@ -1,6 +1,3 @@
-
-
-
 "use client"
 import React, { Suspense, useDeferredValue, useEffect, useState } from 'react'
 import GamesList from './components/GameList'
@@ -17,12 +14,6 @@ export default function GamesPage() {
 
     const deferredSearchQuery = useDeferredValue(searchQuery);
 
-    // get platforms
-    // get games
-    // get paginated games
-    // get paginated games with platform
-    // search games, debounced 
-
     useEffect(() => {
         console.log('searchQuery changed:', searchQuery);
     }, [searchQuery])
@@ -33,7 +24,6 @@ export default function GamesPage() {
             <div className="max-w-7xl mx-auto">
                 <h1 className="text-3xl sm:text-4xl font-bold mb-6">Discover Games</h1>
 
-                {/* Filters */}
                 <Suspense fallback={<GameActionsSkeleton />}>
                     <GameActions selectedPlatformId={selectedPlatformId} setSelectedPlatformId={setSelectedPlatformId} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                 </Suspense>

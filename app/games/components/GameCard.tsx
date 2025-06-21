@@ -1,10 +1,10 @@
-import { GameDetail } from "@/app/types/rawg"
+import { GameItem } from "@/app/types/rawg"
 import GameTags from "./GameTags"
 import Image from "next/image"
 import React from "react"
 import Link from "next/link"
 
-function GameCard({ game }: { game: GameDetail }) {
+function GameCard({ game }: { game: GameItem }) {
     return <>
         <div className="relative h-48">
             <Image

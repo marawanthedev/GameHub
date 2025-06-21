@@ -11,10 +11,16 @@ type CartItem = {
 type CartState = {
     items: CartItem[];
     addToCart: (item: CartItem) => void;
+    removeFromCart: (id: number) => void;
 };
 
 export const useCartStore = create<CartState>((set) => ({
     items: [],
     addToCart: (item) =>
         set((state) => ({ items: [...state.items, item] })),
+    removeFromCart: (id: number) => {
+        set((state) => ({
+            items: state.items.filter(item => item.id !== id)
+        }));
+    }
 }));

@@ -48,7 +48,7 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-12 border-t border-[#30363d] pt-6 text-center text-sm text-gray-500">
+                <div className="mt-12 border-t border-[#30363d] pt-6 text-center text-sm text-gray-100">
                     © {new Date().getFullYear()} GameHub. All rights reserved.
                 </div>
             </div>
