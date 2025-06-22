@@ -2,12 +2,6 @@ import { Suspense } from 'react'
 import LoginSkeleton from './components/skeleton'
 import LoginForm from './components/form'
 
-async function DelayedLoginForm() {
-    // Mimic delay (e.g. fetching user data, session, etc.)
-    await new Promise((res) => setTimeout(res, 2000))
-    return <LoginForm />
-}
-
 export default function LoginPage() {
 
     return (

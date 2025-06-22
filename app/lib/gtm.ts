@@ -1,4 +1,4 @@
-import { getTimeOfDay, TimeOfDay } from "./time";
+import { getTimeOfDay } from "./time";
 
 export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || '';
 export const pageview = (url: string) => {
@@ -71,6 +71,7 @@ export const trackEvent = (params: TrackEventParams) => {
     };
 
     const cleanedData = Object.fromEntries(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         Object.entries(baseData).filter(([_, val]) => val !== undefined)
     );
 
