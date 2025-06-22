@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "a11y:dev": "playwright install && start-server-and-test dev http://localhost:3000 'playwright test tests/a11y.test.ts'"
+    "lint": "next lint"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
