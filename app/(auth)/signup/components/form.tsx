@@ -3,6 +3,8 @@ import { ActionResponse } from "@/app/types/action"
 import { useFormState } from "react-dom"
 import { signupAction } from "../actions"
 import { redirect } from "next/navigation"
+import { GTM_EVENTS, GTM_EVENTS_CATEGORIES, trackEvent } from "@/app/lib/gtm"
+import { getTimeOfDay } from "@/app/lib/time"
 
 
 export default function SignUpForm() {
@@ -11,8 +13,31 @@ export default function SignUpForm() {
         { success: false, message: '' }
     )
 
+
+    if (!state.success) {
+        console.error(state.error)
+        // can include email but requires encryption to make sure we dont get sued :)
+        trackEvent({
+            event: GTM_EVENTS.SIGNUP_FAILURE,
+            category: "authentication",
+            reason: state.message
+        })
+    }
+
     if (state.success) {
+        trackEvent({
+            event: GTM_EVENTS.SIGNUP_SUCCESS,
+            category: "authentication",
+        })
+
         redirect('/confirm-email')
+    }
+
+    const handleSignUpAttempt = () => {
+        trackEvent({
+            event: GTM_EVENTS.SIGNUP_ATTEMPT,
+            category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
+        });
     }
 
     return <>
@@ -55,6 +80,7 @@ export default function SignUpForm() {
 
             <button
                 type="submit"
+                onClick={handleSignUpAttempt}
                 className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
             >
                 Sign up

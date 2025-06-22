@@ -26,11 +26,11 @@ export const signupAction = async (formData: FormData): Promise<ActionResponse> 
 
 
         if (existingUser) {
-            throw new Error('User already exists')
+            return { success: false, message: "User Already exists" }
         }
 
         if (!validationOutCome.success) {
-            throw new Error('Failed to validate form data: ' + validationOutCome.error.message)
+            return { success: false, message: "Validation Failed", error: validationOutCome.error.message }
         }
 
         const { email, password } = validationOutCome.data;
@@ -38,7 +38,9 @@ export const signupAction = async (formData: FormData): Promise<ActionResponse> 
         const { error } = await supabaseServerAction.auth.signUp({ email, password })
 
         if (error) {
-            return { success: false, message: "Failed to signup", error: (error as Error).message }
+            return {
+                success: false, message: (error as Error).message, error: (error as Error).message
+            }
         }
 
         return { success: true, message: "Signedup successfully" };

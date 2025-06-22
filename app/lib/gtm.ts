@@ -32,25 +32,33 @@ export const GTM_EVENTS_CATEGORIES = {
 export type GTMEvent = (typeof GTM_EVENTS)[keyof typeof GTM_EVENTS];
 export type GTMCategory = (typeof GTM_EVENTS_CATEGORIES)[keyof typeof GTM_EVENTS_CATEGORIES];
 
-export const trackEvent = ({
-    event,
-    category,
-    label,
-    value,
-    productName,
-}: {
+
+export type TrackEventParams = {
     event: GTMEvent;
     category: GTMCategory;
     label?: string;
     value?: number;
     productName?: string;
-}) => {
-    window.dataLayer?.push({
-        event,
-        value,
-        event_category: category,
-        event_label: label,
-        product_name: productName,
-        timeOfDay: getTimeOfDay()
-    });
+    [key: string]: string | number | undefined;
+};
+
+export const trackEvent = (params: TrackEventParams) => {
+    if (!window?.dataLayer) return;
+
+
+    const baseData = {
+        event: params.event,
+        event_category: params.category,
+        timeOfDay: getTimeOfDay(),
+        event_label: params.label,
+        value: params.value,
+        product_name: params.productName,
+        reason: params.reason,
+    };
+
+    const cleanedData = Object.fromEntries(
+        Object.entries(baseData).filter(([_, value]) => value !== undefined)
+    );
+
+    window.dataLayer.push(cleanedData);
 };
