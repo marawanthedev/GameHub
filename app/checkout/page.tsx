@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useCartStore } from '../stores/cart'
 import { toast } from 'sonner'
+import { GTM_EVENTS, trackEvent } from '../lib/gtm'
 
 export default function CheckoutPage() {
     const [loading, setLoading] = useState(true)
@@ -24,14 +25,42 @@ export default function CheckoutPage() {
     }, [cartItems, router])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setAnnouncement('Processing payment...')
+        e.preventDefault();
+        setAnnouncement('Processing payment...');
+
+        // Track attempt
+        trackEvent({
+            event: GTM_EVENTS.CHECKOUT_ATTEMPT,
+            category: 'ecommerce',
+            value: subtotal,
+        });
 
         setTimeout(() => {
-            setAnnouncement('Payment complete. Thank you for your order!')
-            toast.success('Payment completed successfully!')
-        }, 3000)
-    }
+            const isSuccess = Math.random() > 0.4; // 60% success rate simulation
+
+            if (isSuccess) {
+                setAnnouncement('Payment complete. Thank you for your order!');
+                toast.success('Payment completed successfully!');
+
+                trackEvent({
+                    event: GTM_EVENTS.CHECKOUT_SUCCESS,
+                    category: 'ecommerce',
+                    value: subtotal,
+                    productNames: Array.from(new Set(cartItems.map(item => item.title))).join(', ')
+                });
+            } else {
+                setAnnouncement('Payment failed. Please try again.');
+                toast.error('Payment failed.');
+
+                trackEvent({
+                    event: GTM_EVENTS.CHECKOUT_FAILURE,
+                    category: 'error',
+                    value: subtotal,
+                    reason: 'Mock failure',
+                });
+            }
+        }, 3000);
+    };
 
     return (
         <main className="min-h-screen bg-[#0d1117] text-white px-4 py-16">
@@ -168,11 +197,3 @@ export default function CheckoutPage() {
     )
 }
 
-// export const metadata = {
-//     title: 'Checkout - GameHub',
-//     description: 'Review your cart and complete your purchase securely.',
-//     robots: {
-//         index: false,
-//         follow: false,
-//     },
-// };
