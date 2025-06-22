@@ -39,25 +39,36 @@ export type TrackEventParams = {
     label?: string;
     value?: number;
     productName?: string;
+    reason?: string;
     [key: string]: string | number | undefined;
 };
 
 export const trackEvent = (params: TrackEventParams) => {
-    if (!window?.dataLayer) return;
+    if (typeof window === 'undefined' || !window.dataLayer) return;
 
+    const {
+        event,
+        category,
+        label,
+        value,
+        productName,
+        reason,
+        ...rest
+    } = params;
 
     const baseData = {
-        event: params.event,
-        event_category: params.category,
+        event,
+        event_category: category,
+        event_label: label,
+        value,
+        productName,
+        reason,
         timeOfDay: getTimeOfDay(),
-        event_label: params.label,
-        value: params.value,
-        product_name: params.productName,
-        reason: params.reason,
+        ...rest,
     };
 
     const cleanedData = Object.fromEntries(
-        Object.entries(baseData).filter(([_, value]) => value !== undefined)
+        Object.entries(baseData).filter(([_, val]) => val !== undefined)
     );
 
     window.dataLayer.push(cleanedData);

@@ -41,6 +41,18 @@ export default function GameDetailsPage() {
                 image: game.background_image,
             });
 
+            trackEvent({
+                event: GTM_EVENTS.ADD_TO_CART,
+                category: 'ecommerce',
+                label: game.name,
+                value: 59.99,
+                productName: game.name,
+                productId: game.id.toString(),
+                platforms: game.platforms.map(p => p.platform.name).join(', '),
+                genres: game.genres.map(g => g.name).join(', '),
+                timeOfDay: getTimeOfDay()
+            });
+
             toast.success(`${game.name} added to cart!`);
             setAddToCartAnnouncement(`${game.name} has been added to your cart.`);
         } catch (error) {
