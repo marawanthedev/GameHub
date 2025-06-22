@@ -54,7 +54,7 @@ export default function CheckoutPage() {
 
                 trackEvent({
                     event: GTM_EVENTS.CHECKOUT_FAILURE,
-                    category: 'error',
+                    category: 'ecommerce',
                     value: subtotal,
                     reason: 'Mock failure',
                 });

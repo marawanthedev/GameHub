@@ -5,7 +5,6 @@ import GamesListSkeleton from './components/GameListSkeleton'
 import GameActions from './components/GameActions'
 import GameActionsSkeleton from './components/GameActionSkeleton'
 
-
 const MemoizedGamesList = React.memo(GamesList);
 
 export default function GamesPage() {

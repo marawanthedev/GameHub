@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { GameDetailsSkeleton } from './components/GameDetailsSkeleton'
 import { GTM_EVENTS, trackEvent } from '@/app/lib/gtm'
 import { getTimeOfDay } from '@/app/lib/time'
+import Link from 'next/link'
 
 export default function GameDetailsPage() {
     const [addToCartAnnouncement, setAddToCartAnnouncement] = useState('');
@@ -94,6 +95,22 @@ export default function GameDetailsPage() {
 
                 <div className="relative z-10 h-full flex items-center justify-start px-6 md:px-20">
                     <article className="max-w-2xl space-y-6" aria-labelledby="game-title">
+                        <Link
+                            href="/games"
+                            className="inline-flex items-center text-blue-400 hover:text-blue-300 transition font-medium mb-4"
+                            aria-label="Back to games list"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5 mr-2"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Back to Games
+                        </Link>
                         <h1 id="game-title" className="text-white text-4xl md:text-5xl font-bold">
                             {game.name}
                         </h1>

@@ -65,3 +65,60 @@ NEXT_PUBLIC_RAWG_API_KEY= 'your-rawg-api-key'
 - cd gamehub
 - npm install
 - npm run dev
+
+## 📊 Google Tag Manager (GTM) Events
+
+This project integrates **Google Tag Manager** and **GA4** to track key user interactions for analytics and optimization.
+
+### ✅ GTM Events Tracked
+
+| Event Name            | Category      | When It Fires                                    | Some Parameters                                    |
+|-----------------------|---------------|--------------------------------------------------|----------------------------------------------------|
+| `signup_attempt`      | `auth`             | When a user attempts to sign up             | `timeOfDay`, `reason?`                             |
+| `signup_success`      | `auth`             | When signup is successful                   | `timeOfDay`, `userId?`                             |
+| `signup_failed`       | `auth`             | When signup fails                           | `timeOfDay`, `reason`                              |
+| `login_attempt`       | `auth`             | When a user attempts to log in              | `timeOfDay`, `reason?`                             |
+| `login_success`       | `auth`             | When login is successful                    | `timeOfDay`, `userId?`                             |
+| `login_failed`        | `auth`             | When login fails                            | `timeOfDay`, `reason`                              |
+| `game_viewed`         | `engagement`       | When a game detail page is viewed           | `productName`, `value`, `timeOfDay`                |
+| `add_to_cart`         | `ecommerce`        | When a game is added to the cart            | `productName`, `value`, `timeOfDay`                |
+| `remove_from_cart`    | `ecommerce`        | When a game is removed from the cart        | `productName`, `value`, `timeOfDay`                |
+| `cart_increment`      | `ecommerce`        | When an item quantity is increased          | `productName`, `cartCount`, `timeOfDay`            |
+| `cart_decrement`      | `ecommerce`        | When an item quantity is decreased          | `productName`, `cartCount`, `timeOfDay`            |
+| `checkout_attempt`    | `ecommerce`        | When a user submits the payment form        | `cartValue`, `productNames`, `timeOfDay`           |
+| `checkout_success`    | `ecommerce`        | When a mock payment succeeds                | `cartValue`, `productNames`, `timeOfDay`           |
+| `checkout_failed`     | `ecommerce`        | When a mock payment fails                   | `cartValue`, `productNames`, `timeOfDay`, `reason` |
+
+---
+
+### 🕒 `timeOfDay` Utility
+
+Each event includes a `timeOfDay` parameter automatically (`morning`, `afternoon`, or `night`) based on the user’s local time, using the `getTimeOfDay()` utility.
+
+---
+
+### 📦 `trackEvent` Utility
+
+Events are pushed using a global utility:
+
+```ts
+export const trackEvent = (params: TrackEventParams) => {
+  if (!window?.dataLayer) return;
+
+  const baseData = {
+    event: params.event,
+    event_category: params.category,
+    timeOfDay: getTimeOfDay(),
+    event_label: params.label,
+    value: params.value,
+    product_name: params.productName,
+    reason: params.reason,
+    ...params, // Add additional dynamic fields
+  };
+
+  const cleanedData = Object.fromEntries(
+    Object.entries(baseData).filter(([_, value]) => value !== undefined)
+  );
+
+  window.dataLayer.push(cleanedData);
+};
