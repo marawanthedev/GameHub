@@ -7,9 +7,11 @@ import rawg from '@/app/lib/rawg'
 import { GameDetail } from '@/app/types/rawg'
 import { useCartStore } from '@/app/stores/cart'
 import { DescriptionClamp } from './components/DescriptionClamp'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner';
 import { GameDetailsSkeleton } from './components/GameDetailsSkeleton'
+import { GTM_EVENTS, trackEvent } from '@/app/lib/gtm'
+import { getTimeOfDay } from '@/app/lib/time'
 
 export default function GameDetailsPage() {
     const [addToCartAnnouncement, setAddToCartAnnouncement] = useState('');
@@ -48,12 +50,20 @@ export default function GameDetailsPage() {
         }
     };
 
-    if (isLoading) {
-        return (
-            <GameDetailsSkeleton />
-        )
-    }
+    useEffect(() => {
+        if (game?.name) {
+            trackEvent({
+                event: GTM_EVENTS.GAME_VIEWED,
+                category: 'engagement',
+                label: game.name,
+                value: 59.99,
+                productName: game.name,
+                timeOfDay: getTimeOfDay()
+            });
+        }
+    }, [game?.name]);
 
+    if (isLoading) return <GameDetailsSkeleton />
     if (!game) throw new Error('Game not found');
     if (error) throw error;
 

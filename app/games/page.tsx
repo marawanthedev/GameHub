@@ -1,5 +1,5 @@
 "use client"
-import React, { Suspense, useDeferredValue, useEffect, useState } from 'react'
+import React, { Suspense, useDeferredValue, useState } from 'react'
 import GamesList from './components/GameList'
 import GamesListSkeleton from './components/GameListSkeleton'
 import GameActions from './components/GameActions'
@@ -11,12 +11,7 @@ const MemoizedGamesList = React.memo(GamesList);
 export default function GamesPage() {
     const [selectedPlatformId, setSelectedPlatformId] = useState<string>("all")
     const [searchQuery, setSearchQuery] = useState<string>("")
-
     const deferredSearchQuery = useDeferredValue(searchQuery);
-
-    useEffect(() => {
-        console.log('searchQuery changed:', searchQuery);
-    }, [searchQuery])
 
 
     return (

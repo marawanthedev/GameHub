@@ -14,7 +14,7 @@ export default function LoginPage() {
         <div className="min-h-screen bg-[#0d1117] text-white flex items-center justify-center px-4">
             <div className="max-w-md w-full bg-[#161b22] shadow-xl rounded-2xl p-8 space-y-6 border border-[#30363d]">
                 <Suspense fallback={<LoginSkeleton />}>
-                    <DelayedLoginForm />
+                    <LoginForm />
                 </Suspense>
             </div>
         </div>
