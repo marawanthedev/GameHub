@@ -4,16 +4,15 @@ import { prisma } from '@/app/lib/prisma/client'
 export async function POST(req: NextRequest) {
     const { token } = await req.json()
 
-    console.log({ verifyToken: token })
     if (!token) {
         return NextResponse.json({ error: 'Token is required' }, { status: 400 })
     }
 
     const record = await prisma.verificationToken.findUnique({ where: { token } })
 
-    console.log({ record })
 
     if (!record || record.expiresAt < new Date()) {
+        console.log('invalid token')
         return NextResponse.json({ error: 'Token is invalid or expired' }, { status: 400 })
     }
 
@@ -23,6 +22,7 @@ export async function POST(req: NextRequest) {
     })
 
     await prisma.verificationToken.delete({ where: { token } })
+
 
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/verified-success`)
 }

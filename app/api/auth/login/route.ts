@@ -6,8 +6,6 @@ import { prisma } from '@/app/lib/prisma/client';
 import { ApiResponse, SuccessfulApiResponse } from '@/app/types/api';
 import { SignJWT } from 'jose';
 
-
-
 export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
     try {
         const { email, password } = await req.json();

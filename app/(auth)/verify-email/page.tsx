@@ -12,6 +12,7 @@ export default function VerifyEmailPage() {
     // Prevents double fetch on dev (React Strict Mode)
     const hasFetched = useRef(false)
 
+
     useEffect(() => {
         if (!token || hasFetched.current) return
 
@@ -24,6 +25,7 @@ export default function VerifyEmailPage() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token }),
                 })
+
                 if (res.ok) {
                     setStatus('success')
                     setTimeout(() => router.push('/login'), 1000)

@@ -1,15 +1,23 @@
-
-import Link from 'next/link';
-import { supabaseServerAction } from '../lib/supabase/server';
 import LogoutButton from './LogoutButton';
+import { cookies } from 'next/headers';
+import { JWT_SECRET } from '@/app/constants';
+import { jwtVerify } from 'jose';
+import Link from 'next/link';
 
 export default async function NavBarActions() {
-    const { data: { session } } = await supabaseServerAction.auth.getSession()
-    const user = session?.user;
+    const cookieStore = cookies();
+    const token = cookieStore.get('token')?.value;
+    let isAuthenticated = false;
+
+    if (token) {
+        const secret = new TextEncoder().encode(JWT_SECRET)
+        jwtVerify(token, secret)
+        isAuthenticated = true
+    }
 
     return (
         <div className="flex items-center gap-3">
-            {user ? (
+            {isAuthenticated ? (
                 <LogoutButton />
             ) : (
                 <>

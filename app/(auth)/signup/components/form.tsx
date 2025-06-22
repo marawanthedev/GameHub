@@ -1,7 +1,7 @@
 'use client'
 import { ActionResponse } from "@/app/types/action"
 import { useFormState } from "react-dom"
-import { signupAction } from "../actions"
+import { signupAction } from "../../../actions/auth/signup"
 import { redirect } from "next/navigation"
 import { GTM_EVENTS, GTM_EVENTS_CATEGORIES, trackEvent } from "@/app/lib/gtm"
 import { useCallback, useEffect } from "react"
@@ -12,7 +12,6 @@ export default function SignUpForm() {
         async (_prevState, formData) => signupAction(formData),
         { success: false, message: '' }
     )
-
 
     useEffect(() => {
 

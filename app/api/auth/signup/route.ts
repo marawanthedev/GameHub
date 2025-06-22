@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import { prisma } from '@/app/lib/prisma/client'
-import { API_BASE_URL, CLIENT_BASE_URL, JWT_SECRET } from '@/app/constants'
+import { CLIENT_BASE_URL, JWT_SECRET } from '@/app/constants'
 import { ApiResponse, SuccessfulApiResponse } from '@/app/types/api'
 import { SignJWT } from 'jose'
 import { sendVerificationEmail } from '@/app/lib/email'
@@ -25,6 +25,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
         // Generate a verification token
         const verificationToken = crypto.randomBytes(32).toString('hex')
         const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24) // 24 hours
+
 
         await prisma.verificationToken.create({
             data: {

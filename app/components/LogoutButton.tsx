@@ -1,28 +1,37 @@
 'use client'
 
-import { useTransition } from 'react';
-import { logoutAction } from '../actions/logout';
+import { useRouter } from 'next/navigation'
 import { useCartStore } from '../stores/cart';
+import { useTransition } from 'react';
 
 export default function LogoutButton() {
+    const router = useRouter()
     const clearCart = useCartStore((state) => state.clearCart);
+
     const [isPending, startTransition] = useTransition();
 
     const handleLogout = async () => {
-        await logoutAction();
+        await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include',
+        })
+
 
         startTransition(() => {
             clearCart();
         });
-    };
+        router.refresh() // refreshes to reflect logout state
+    }
 
     return (
         <button
             onClick={handleLogout}
-            disabled={isPending}
-            className="text-sm px-4 py-2 bg-[#21262d] text-white rounded-lg border border-[#30363d] hover:bg-[#30363d] transition"
+            className="text-sm px-4 py-2 text-white hover:text-red-400 transition"
         >
-            {isPending ? 'Logging out...' : 'Logout'}
+            {isPending ? '...Logging out' : 'Logout'}
         </button>
-    );
+    )
 }
+
+
+
