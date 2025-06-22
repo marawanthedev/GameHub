@@ -18,7 +18,7 @@ export const loginAction = async (formData: FormData): Promise<{ success: boolea
         const validationOutcome = loginSchema.safeParse(Object.fromEntries(formData));
 
         if (!validationOutcome.success) {
-            return { success: false, errors: validationOutcome.error.flatten().fieldErrors, message: 'Failed to login', error: 'Failed to login' };
+            return { success: false, errors: validationOutcome.error.flatten().fieldErrors, message: "Validation Failed", error: "Validation Failed" };
         }
 
         const { email, password } = validationOutcome.data;
@@ -27,7 +27,7 @@ export const loginAction = async (formData: FormData): Promise<{ success: boolea
         const { error } = await supabaseServerAction.auth.signInWithPassword({ email, password });
 
         if (error) {
-            return { success: false, message: "Failed to login", error: error.message };
+            return { success: false, message: error.message, error: error.message };
         }
 
         return { success: true, message: "Logged in successfully" };
