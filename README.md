@@ -122,3 +122,20 @@ export const trackEvent = (params: TrackEventParams) => {
 
   window.dataLayer.push(cleanedData);
 };
+
+
+## 🛡️ Google Tag Manager (GTM) Consent Handling
+
+This project includes a privacy-conscious implementation of Google Tag Manager (GTM) with user consent support.
+
+### ✅ Behavior
+
+- GTM is **not loaded by default**.
+- It loads **only after the user consents**, which is stored in `localStorage` using the key: `gtm_consent = "granted"`.
+- Once granted, the GTM script is injected dynamically on the client side.
+
+### 🧠 Technical Overview
+
+- Consent is checked via `localStorage.getItem('gtm_consent')`.
+- If granted and GTM is not already loaded, the script is injected dynamically using `innerHTML` (not `src`) to ensure inline execution.
+- `window.gtmScriptLoaded` flag prevents multiple injections.
