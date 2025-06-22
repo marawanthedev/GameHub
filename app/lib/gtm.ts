@@ -71,8 +71,7 @@ export const trackEvent = (params: TrackEventParams) => {
     };
 
     const cleanedData = Object.fromEntries(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        Object.entries(baseData).filter(([_, val]) => val !== undefined)
+        Object.entries(baseData).filter(([, val]) => val !== undefined)
     );
 
     window.dataLayer.push(cleanedData);

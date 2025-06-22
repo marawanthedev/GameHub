@@ -95,7 +95,6 @@ export default function GamesList({ selectedPlatformId, searchQuery }: { selecte
 
             <ul
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
-                role="list"
                 aria-label="List of video games"
                 ref={parentRef}
             >
