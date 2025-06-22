@@ -139,3 +139,39 @@ This project includes a privacy-conscious implementation of Google Tag Manager (
 - Consent is checked via `localStorage.getItem('gtm_consent')`.
 - If granted and GTM is not already loaded, the script is injected dynamically using `innerHTML` (not `src`) to ensure inline execution.
 - `window.gtmScriptLoaded` flag prevents multiple injections.
+
+
+## 🛠️ CI/CD with GitHub Actions
+
+This project uses **GitHub Actions** to run automated linting and build checks on every push and pull request.
+
+### ✅ What It Checks
+
+- **Linting** using ESLint (including accessibility rules)
+- **Build Validation** using `next build`
+- ✅ Runs on:
+  - Every push to `master`
+  - Every pull request to any branch
+
+---
+
+## 🔐 Setting Environment Variables for CI
+
+Your app requires Supabase environment variables to run the build. These need to be added to GitHub Actions:
+
+1. Go to your repository on GitHub
+2. Navigate to **Settings → Secrets and variables → Actions**
+3. Under **Secrets**, click **"New repository secret"** and add the following:
+
+| Name                             | Value                              |
+|----------------------------------|------------------------------------|
+| `NEXT_PUBLIC_SUPABASE_URL`       | Your Supabase project URL          |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`  | Your Supabase public anon key      |
+
+These values can be found in your [Supabase dashboard](https://app.supabase.com/project/_/settings/api) under **Project Settings → API**.
+
+### Example
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-public-anon-key
