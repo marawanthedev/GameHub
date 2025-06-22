@@ -11,6 +11,7 @@ export const pageview = (url: string) => {
 export const GTM_EVENTS = {
     GAME_VIEWED: 'game_viewed',
     ADD_TO_CART: 'add_to_cart',
+    REMOVE_FROM_CART: 'remove_from_cart',
     CHECKOUT_STARTED: 'checkout_started',
     LOGIN_ATTEMPT: 'login_attempt',
     LOGIN_SUCCESS: 'login_success',

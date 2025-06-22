@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useCartStore } from '@/app/stores/cart';
+import { GTM_EVENTS, trackEvent } from '../lib/gtm';
 
 export default function CartPage() {
     const [loading, setLoading] = useState(true);
@@ -19,10 +20,20 @@ export default function CartPage() {
     }, []);
 
     const handleRemoveFromCart = (id: number, title: string) => {
+        const removedItem = cartItems.find(item => item.id === id);
+
         removeFromCart(id);
         setRemoveFromCartAnnouncement(`${title} has been removed from your cart.`);
-        // Optional: announce visually too
-        // document.getElementById('cart-announcement')?.focus();
+
+        if (removedItem) {
+            trackEvent({
+                event: GTM_EVENTS.REMOVE_FROM_CART,
+                category: 'ecommerce',
+                label: removedItem.title,
+                productName: removedItem.title,
+                value: removedItem.price,
+            });
+        }
     };
 
     if (!cartItems && !loading) {
