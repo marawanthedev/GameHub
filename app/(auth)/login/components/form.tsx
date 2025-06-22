@@ -5,6 +5,7 @@ import { useFormState } from 'react-dom'
 import { redirect } from 'next/navigation'
 import { ActionResponse } from '@/app/types/action'
 import { GTM_EVENTS, GTM_EVENTS_CATEGORIES, trackEvent } from '@/app/lib/gtm'
+import { useCallback, useEffect } from 'react'
 
 export default function LoginForm() {
     const [state, formAction] = useFormState<ActionResponse, FormData>(
@@ -12,36 +13,34 @@ export default function LoginForm() {
         { success: false, message: '' }
     )
 
+    useEffect(() => {
+        if (!state.success) {
+            // can include email but requires encryption to make sure we dont get sued :)
+            trackEvent({
+                event: GTM_EVENTS.LOGIN_FAILURE,
+                category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
+                reason: state.message
+            })
+        }
+
+        if (state.success) {
+            trackEvent({
+                event: GTM_EVENTS.LOGIN_SUCCESS,
+                category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
+            })
+
+            redirect('/games')
+        }
+
+    }, [state.success, state.message])
 
 
-    if (!state.success) {
-        // can include email but requires encryption to make sure we dont get sued :)
-        trackEvent({
-            event: GTM_EVENTS.LOGIN_FAILURE,
-            category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
-            reason: state.message
-        })
-    }
-
-    if (state.success) {
-        trackEvent({
-            event: GTM_EVENTS.LOGIN_SUCCESS,
-            category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
-        })
-
-        redirect('/confirm-email')
-    }
-
-    const handleLoginAttempt = () => {
+    const handleLoginAttempt = useCallback(() => {
         trackEvent({
             event: GTM_EVENTS.LOGIN_ATTEMPT,
             category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
         });
-
-    }
-    if (state.success) {
-        redirect('/games')
-    }
+    }, [])
 
     return (
         <>

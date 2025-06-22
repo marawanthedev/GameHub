@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
-import { logoutAction } from '../actions/logout';
 import { supabaseServerAction } from '../lib/supabase/server';
+import LogoutButton from './LogoutButton';
 
 export default async function NavBarActions() {
     const { data: { session } } = await supabaseServerAction.auth.getSession()
@@ -10,16 +10,7 @@ export default async function NavBarActions() {
     return (
         <div className="flex items-center gap-3">
             {user ? (
-                <>
-                    <form action={logoutAction}>
-                        <button
-                            type="submit"
-                            className="text-sm px-4 py-2 bg-[#21262d] text-white rounded-lg border border-[#30363d] hover:bg-[#30363d] transition"
-                        >
-                            Logout
-                        </button>
-                    </form>
-                </>
+                <LogoutButton />
             ) : (
                 <>
                     <Link

@@ -13,6 +13,7 @@ type CartState = {
     items: CartItem[];
     addToCart: (item: CartItem) => void;
     removeFromCart: (id: number) => void;
+    clearCart: () => void;
 };
 
 export const useCartStore = create<CartState>()(
@@ -26,6 +27,7 @@ export const useCartStore = create<CartState>()(
                     items: state.items.filter((item) => item.id !== id),
                 }));
             },
+            clearCart: () => set({ items: [] }),
         }),
         {
             name: 'cart-storage',

@@ -12,6 +12,7 @@ export default function CartPage() {
     const removeFromCart = useCartStore((state) => state.removeFromCart);
     const [removeFromCartAnnouncement, setRemoveFromCartAnnouncement] = useState('');
 
+    // bad candidate for memoizing
     const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
 
     useEffect(() => {
@@ -19,6 +20,8 @@ export default function CartPage() {
         return () => clearTimeout(timer);
     }, []);
 
+
+    // bad candidate for memoizing
     const handleRemoveFromCart = (id: number, title: string) => {
         const removedItem = cartItems.find(item => item.id === id);
 
@@ -37,7 +40,6 @@ export default function CartPage() {
     };
 
     if (!cartItems && !loading) {
-
         return (
             <main className="min-h-screen bg-[#0d1117] text-white flex items-center justify-center">
                 <p className="text-gray-400">Your cart is empty.</p>

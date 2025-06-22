@@ -16,7 +16,6 @@ type GameActionsProps = {
 }
 
 export default function GameActions({ setSelectedPlatformId, selectedPlatformId, searchQuery, setSearchQuery }: GameActionsProps) {
-
     const { data: platforms = [], isLoading: loadingPlatforms } = useSuspenseQuery({
         queryKey: ['platforms'],
         queryFn: fetchPlatforms,

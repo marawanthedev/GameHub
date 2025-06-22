@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function GameActionsSkeleton() {
     return (
         <div className="mb-8 flex flex-wrap gap-4 animate-pulse">
@@ -9,3 +11,6 @@ export default function GameActionsSkeleton() {
         </div>
     );
 }
+
+
+export const MemoizedGameActionsSkeleton = React.memo(GameActionsSkeleton)

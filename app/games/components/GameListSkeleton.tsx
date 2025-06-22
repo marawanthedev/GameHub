@@ -1,4 +1,5 @@
-// components/GamesListSkeleton.tsx
+import React from "react"
+
 export default function GamesListSkeleton() {
     return (
         <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-pulse">
@@ -16,3 +17,6 @@ export default function GamesListSkeleton() {
         </main>
     )
 }
+
+// good candidate for memo as we have lots of pagination and on filter changes that are possible
+export const MemoizedGamesListSkeleton = React.memo(GamesListSkeleton)

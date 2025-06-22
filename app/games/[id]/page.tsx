@@ -16,7 +16,6 @@ import Link from 'next/link'
 
 export default function GameDetailsPage() {
     const [addToCartAnnouncement, setAddToCartAnnouncement] = useState('');
-
     const { id } = useParams()
     const addToCart = useCartStore((state) => state.addToCart)
 
@@ -33,6 +32,8 @@ export default function GameDetailsPage() {
         enabled: !!id,
     })
 
+    // bad memoization candidate
+    // bcs it will be called ()=> handleAddToCart(game) -> new function created each time
     const handleAddToCart = (game: GameDetail) => {
         try {
             addToCart({

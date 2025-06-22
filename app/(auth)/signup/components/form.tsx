@@ -4,6 +4,7 @@ import { useFormState } from "react-dom"
 import { signupAction } from "../actions"
 import { redirect } from "next/navigation"
 import { GTM_EVENTS, GTM_EVENTS_CATEGORIES, trackEvent } from "@/app/lib/gtm"
+import { useCallback, useEffect } from "react"
 
 
 export default function SignUpForm() {
@@ -13,30 +14,35 @@ export default function SignUpForm() {
     )
 
 
-    if (!state.success) {
-        // can include email but requires encryption to make sure we dont get sued :)
-        trackEvent({
-            event: GTM_EVENTS.SIGNUP_FAILURE,
-            category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
-            reason: state.message
-        })
-    }
+    useEffect(() => {
 
-    if (state.success) {
-        trackEvent({
-            event: GTM_EVENTS.SIGNUP_SUCCESS,
-            category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
-        })
+        if (!state.success) {
+            // can include email but requires encryption to make sure we dont get sued :)
+            trackEvent({
+                event: GTM_EVENTS.SIGNUP_FAILURE,
+                category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
+                reason: state.message
+            })
+        }
 
-        redirect('/confirm-email')
-    }
+        if (state.success) {
+            trackEvent({
+                event: GTM_EVENTS.SIGNUP_SUCCESS,
+                category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
+            })
 
-    const handleSignUpAttempt = () => {
+            redirect('/confirm-email')
+        }
+
+    }, [state.message, state.success])
+
+
+    const handleSignUpAttempt = useCallback(() => {
         trackEvent({
             event: GTM_EVENTS.SIGNUP_ATTEMPT,
             category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
         });
-    }
+    }, [])
 
     return <>
         <form action={formAction} className="space-y-4 text-sm font-medium">

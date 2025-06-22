@@ -24,6 +24,14 @@ export default function CheckoutPage() {
         return () => clearTimeout(timer)
     }, [cartItems, router])
 
+
+    // bad candidate for memoize
+    // why?
+    // bcs this depends on cart items and subtotal
+    // if we add them as dependecy then this means it will get recreated every time those two values change
+    // which is actually the only possibility of state change, so we memoize smth that will get recrated on each re-render
+    // and scenario 2 if the person clicks on pay and it fails, the submit handler dont update any statful variable so it wont trigger a re-render , so memoizing for that case is usless as it wont be re-created actually
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setAnnouncement('Processing payment...');
