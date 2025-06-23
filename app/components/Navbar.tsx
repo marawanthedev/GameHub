@@ -1,8 +1,7 @@
 import NavBarActions from './NavBarActions';
 import NavbarShoppingCart from './NavbarShoppingCart';
 import AppLink from './AppLink';
-import Link from 'next/link';
-import { SUPPORTED_LOCALS } from '../constants';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface NavbarProps {
     locale: string;
@@ -23,20 +22,8 @@ export async function Navbar({ locale }: NavbarProps) {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        {/* 🌐 Language Switcher */}
-                        <div className="flex items-center space-x-2 text-sm">
-                            {SUPPORTED_LOCALS.map((loc) => (
-                                <Link
-                                    key={loc}
-                                    href={`/${loc}`}
-                                    className={`hover:underline ${loc === locale ? 'text-blue-400' : 'text-gray-400'
-                                        }`}
-                                >
-                                    {loc.toUpperCase()}
-                                </Link>
-                            ))}
-                        </div>
-
+                        {/* two level of prop passing  but should be fine as i wanetd to move it one level down for it to be client and no need for context for this */}
+                        <LanguageSwitcher locale={locale} />
                         <NavBarActions />
                         <NavbarShoppingCart />
                     </div>

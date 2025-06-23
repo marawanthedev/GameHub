@@ -5,6 +5,7 @@ import React from "react"
 import AppLink from "@/app/components/AppLink"
 
 function GameCard({ game }: { game: GameItem }) {
+
     return <>
         <div className="relative h-48">
             <Image

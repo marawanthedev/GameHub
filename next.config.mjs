@@ -4,10 +4,6 @@ const nextConfig = {
     images: {
         domains: ['media.rawg.io', 'image.api.playstation.com'],
     },
-    i18n: {
-        locales: ['en', 'de'],
-        defaultLocale: 'en',
-    },
 };
 
 export default withSentryConfig(nextConfig, {

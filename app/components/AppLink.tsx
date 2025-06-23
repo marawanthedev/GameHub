@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { usePathname } from 'next/navigation'
 import { PropsWithChildren } from 'react'
+import { useLocale } from '../hooks/useLocale'
 
 export default function AppLink<T>({
     href,
@@ -16,6 +17,7 @@ export default function AppLink<T>({
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
     const startTimeRef = useRef<number>(0)
     const lastPathRef = useRef(pathname)
+    const locale = useLocale()
 
     function removeLoader() {
         if (!toastIdRef.current) return
@@ -33,7 +35,6 @@ export default function AppLink<T>({
     }, [pathname])
 
     const handleClick = () => {
-
         if (lastPathRef.current === pathname) return
 
         const nextPageName = href !== '/' ? href.split('/')[1] : "landing"
@@ -44,9 +45,11 @@ export default function AppLink<T>({
         }, 100)
     }
 
+    const normalizedHref = href.startsWith(`/${locale}`) ? href : `/${locale}${href}`;
+
     return (
         <Link
-            href={href}
+            href={normalizedHref}
             onClick={handleClick}
             {...props}
         >

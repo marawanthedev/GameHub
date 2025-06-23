@@ -39,11 +39,11 @@ const fetchGames = async ({
     };
 };
 
-
-export default function GamesList({ selectedPlatformId, searchQuery }: { selectedPlatformId: string, searchQuery: string }) {
+export default function GamesList({ selectedPlatformId, searchQuery, }: { selectedPlatformId: string, searchQuery: string }) {
     const debouncedFetchNextPage = useDebounce(() => {
         fetchNextPage();
     }, 500);
+
 
     const {
         data,

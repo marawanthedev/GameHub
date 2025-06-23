@@ -13,7 +13,6 @@ export default function GamesPage() {
     const [searchQuery, setSearchQuery] = useState<string>("")
     const deferredSearchQuery = useDeferredValue(searchQuery);
 
-
     return (
         <div className="min-h-screen bg-[#0d1117] text-white px-4 py-8">
             <div className="max-w-7xl mx-auto">
