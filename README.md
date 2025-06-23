@@ -48,16 +48,6 @@ app/
 public/
 styles/
 
-## 🌐 Environment Variables
-
-Create a `.env.local` file in the root directory:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_RAWG_API_KEY= 'your-rawg-api-key'
-
----
 
 ## 🛠 Setup & Run
 
@@ -65,6 +55,31 @@ NEXT_PUBLIC_RAWG_API_KEY= 'your-rawg-api-key'
 - cd gamehub
 - npm install
 - npm run dev
+
+## ⚙️ Environment Variable Setup
+
+Ensure the following `.env` values are configured correctly for both local and production environments:
+
+```env
+# App base URLs
+NEXT_PUBLIC_APP_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api
+
+# RAWG.io Game API Key
+NEXT_PUBLIC_RAWG_API_KEY=your_rawg_api_key
+
+# Google Tag Manager
+NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
+
+# Database
+DATABASE_URL=your_neon_db_connection_url
+
+# JWT Secret for signing login tokens
+JWT_SECRET=your_super_secret_key
+
+# Resend Email Configuration
+RESEND_API_KEY=your_resend_api_key
+FROM_EMAIL=your_verified_email@example.com
 
 ## 📊 Google Tag Manager (GTM) Events
 
@@ -155,23 +170,58 @@ This project uses **GitHub Actions** to run automated linting and build checks o
 
 ---
 
-## 🔐 Setting Environment Variables for CI
+## 🔐 Authentication & Email Verification Flow
 
-Your app requires Supabase environment variables to run the build. These need to be added to GitHub Actions:
+This project implements a secure, custom authentication system with email verification using JWTs, Prisma, and Resend.
 
-1. Go to your repository on GitHub
-2. Navigate to **Settings → Secrets and variables → Actions**
-3. Under **Secrets**, click **"New repository secret"** and add the following:
+---
 
-| Name                             | Value                              |
-|----------------------------------|------------------------------------|
-| `NEXT_PUBLIC_SUPABASE_URL`       | Your Supabase project URL          |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY`  | Your Supabase public anon key      |
+### ✅ Signup Flow
 
-These values can be found in your [Supabase dashboard](https://app.supabase.com/project/_/settings/api) under **Project Settings → API**.
+1. User fills the **signup form** with email and password.
+2. Server processes the request:
+   - Hashes the password with `bcrypt`
+   - Stores the user in the database with `verified = false`
+   - Creates a unique email verification token (stored in a separate table)
+   - Sends a verification email with the token using **Resend**
+3. User is redirected to a `Please verify your email` page.
 
-### Example
+---
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-public-anon-key
+### 📩 Email Verification
+
+- The verification email contains a link to: https://yourdomain.com/verify-email?token=UNIQUE_TOKEN
+
+- When visited:
+- The frontend makes a `POST` request to `/api/auth/verify-email`
+- Server checks:
+  - If the token exists
+  - If it has expired
+- If valid:
+  - Marks the user as verified
+  - Deletes the token
+  - Redirects to a `verified-success` or `login` page
+
+---
+
+### 🔓 Login Flow
+
+1. User submits the **login form**.
+2. Server:
+ - Validates credentials (using `bcrypt.compare`)
+ - Optionally ensures user is verified
+ - Signs a JWT with [`jose`](https://github.com/panva/jose)
+ - Sends it via an **HTTP-only cookie**
+
+---
+
+### 🔐 Access Control
+
+- Protected routes use:
+- Middleware or layout-based verification
+- JWT cookie parsing
+- `verified` flag checking
+- Unverified or unauthenticated users are redirected to `/login`.
+
+---
+
