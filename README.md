@@ -32,6 +32,26 @@ GameHub is a beautifully crafted, accessible, and high-performance video game st
 
 ---
 
+## 🧩 Contentful Headless CMS Integration (EN + DE)
+
+This project uses [Contentful](https://www.contentful.com/) as a headless CMS to manage homepage content in multiple languages — specifically English (`en`) and German (`de`).
+
+### ✅ Structure
+
+- Each homepage entry in Contentful has fields like:
+  - `heroTitle`, `heroSubtitle`, `ctaLabel`, `ctaLink`, `ogImage`, etc.
+- Content is localized via Contentful’s built-in localization system.
+- Each locale (`en`, `de`) has its own translated entry in Contentful.
+- Content is queried using locale-aware API requests:
+- you can checkout the home page at app\[locale]\page.tsx
+  
+```ts
+const { items } = await contentfulClient.getEntries<HomepageSkeleton>({
+  content_type: 'homepage',
+  locale: 'en', // or 'de'
+});
+
+---
 ## 🧪 Project Structure
 
 app/
