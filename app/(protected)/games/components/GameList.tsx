@@ -1,7 +1,5 @@
 'use client'
-
 import { GameItem } from '@/app/types/rawg'
-
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { useDebounce } from '@/app/hooks/useThrottle';
 import { useEffect, useRef } from 'react';
@@ -65,7 +63,6 @@ export default function GamesList({ selectedPlatformId, searchQuery }: { selecte
 
     const parentRef = useRef<HTMLUListElement>(null);
 
-
     useEffect(() => {
         if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
         const observer = new IntersectionObserver((entries) => {
@@ -79,9 +76,6 @@ export default function GamesList({ selectedPlatformId, searchQuery }: { selecte
         observer.observe(loadMoreRef.current);
         return () => observer.disconnect();
     }, [hasNextPage, isFetchingNextPage, fetchNextPage, debouncedFetchNextPage]);
-
-
-
 
     return (
         <>
@@ -98,7 +92,7 @@ export default function GamesList({ selectedPlatformId, searchQuery }: { selecte
                 aria-label="List of video games"
                 ref={parentRef}
             >
-                {data?.pages.map((page) =>
+                {data?.pages?.map((page) =>
                     page.results.map((game) => (
                         <li
                             key={game.id}

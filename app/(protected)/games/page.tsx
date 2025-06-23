@@ -4,7 +4,7 @@ import GamesList from './components/GameList'
 import GameActions from './components/GameActions'
 import { MemoizedGameActionsSkeleton } from './components/GameActionSkeleton'
 import { MemoizedGamesListSkeleton } from './components/GameListSkeleton'
-
+// import ErrorBoundaryWrapper from '@/app/components/ErrorBoundaryWrapper'
 
 const MemoizedGamesList = React.memo(GamesList);
 
@@ -24,7 +24,10 @@ export default function GamesPage() {
                 </Suspense>
 
                 <Suspense fallback={<MemoizedGamesListSkeleton />}>
+                    {/* wrapping games  could be useful but in our case its not since that all errors within it are async so they wont crash nor be caught by the error boundary thats why we have global error listenrs to at least let the user know that smth went wrong (same applies to game actions) */}
+                    {/* <ErrorBoundaryWrapper> */}
                     <MemoizedGamesList selectedPlatformId={selectedPlatformId} searchQuery={deferredSearchQuery} />
+                    {/* </ErrorBoundaryWrapper> */}
                 </Suspense>
             </div >
         </div >

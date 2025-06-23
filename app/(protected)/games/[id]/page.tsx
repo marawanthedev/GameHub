@@ -13,11 +13,39 @@ import { GameDetailsSkeleton } from './components/GameDetailsSkeleton'
 import { GTM_EVENTS, trackEvent } from '@/app/lib/gtm'
 import { getTimeOfDay } from '@/app/lib/time'
 import AppLink from '@/app/components/AppLink'
+import ErrorBoundaryWrapper, { ERROR_BOUNDARY_FALLBACK_BUTTON_DEFAULT_CLASSES } from '@/app/components/ErrorBoundaryWrapper'
+import { twMerge } from 'tailwind-merge'
 
-export default function GameDetailsPage() {
+export default function GameDetailsPageWrapper() {
+    {/* Why it make sense to wrap this one?, because we could have cases of no id being in different format, for this case we expect an number based id, so will throw an error if url was /games/s bcs this will surely fail, no need to hit the api , */ }
+    // why wrap here and not at layout?
+    // so we can keep layout server as we need to add meta data for seo
+
+    return <ErrorBoundaryWrapper resetButton={(reset) => (
+        <button
+            onClick={() => {
+                reset()
+                window.location.href = '/games'
+            }}
+            className={twMerge(ERROR_BOUNDARY_FALLBACK_BUTTON_DEFAULT_CLASSES, 'bg-black text-white')}
+        >
+            View Games
+        </button>
+    )
+    }>
+        <GameDetailsPage />
+    </ErrorBoundaryWrapper>
+
+}
+
+function GameDetailsPage() {
     const [addToCartAnnouncement, setAddToCartAnnouncement] = useState('');
     const { id } = useParams()
     const addToCart = useCartStore((state) => state.addToCart)
+
+    if (Number.isNaN(Number(id))) {
+        throw new Error('Game does not exist')
+    }
 
     const {
         data: game,

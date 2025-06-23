@@ -37,12 +37,15 @@ export default async function RootLayout({
       <body
         className={`antialiased font-sans`}
       >
-        <Navbar />
         <Toaster richColors position="bottom-center" closeButton visibleToasts={1} />
         <GTMConsentHandler />
         <ConsentBanner />
-        {children}
-        <Footer />
+        {/* to allow error boundary takes remaining space to avoid buggy layout */}
+        <div className="flex flex-col align-between min-h-screen">
+          <Navbar />
+          {children}
+          <Footer />
+        </div>
         <GlobalErrorListener />
       </body>
     </html>

@@ -1,4 +1,3 @@
-// app/verify-email/page.tsx
 'use client'
 
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -12,9 +11,12 @@ export default function VerifyEmailPage() {
     // Prevents double fetch on dev (React Strict Mode)
     const hasFetched = useRef(false)
 
+    if (!token) {
+        throw new Error('Couldnt find verification token')
+    }
 
     useEffect(() => {
-        if (!token || hasFetched.current) return
+        if (hasFetched.current) return
 
         hasFetched.current = true
 

@@ -287,3 +287,45 @@ This project includes a `GlobalErrorListener` component that listens for global 
 
 Its primary purpose is to catch unexpected client-side runtime errors and surface them to the user through a toast notification using the `sonner` library. This improves UX by giving users immediate feedback that something went wrong — even if the UI doesn't visibly break.
 
+
+## 🔧 Error Boundary Wrapper
+
+To gracefully handle unexpected errors in parts of your UI, this project uses a custom `ErrorBoundaryWrapper` component powered by [`react-error-boundary`](https://github.com/bvaughn/react-error-boundary).
+
+### ✨ Customizable Reset Button
+
+The `ErrorBoundaryWrapper` allows consumers to fully override the **reset button** in the fallback UI. This is useful when:
+
+- You want to render a **different element** (e.g., a `Link`, icon button, etc.)
+- You need to pass additional **props** (e.g., `aria-*`, `data-*`, or analytics attributes)
+- You want to apply **custom styles**, transitions, or behaviors
+- You need to trigger **navigation** or a parent action before resetting the error state
+- You can find an exmaple at app/(auth)/verify-email/layout.tsx
+
+### 🧱 Default Button Styling
+
+To help with styling consistency, the component exports a constant for default button styles:
+
+```ts
+export const ERROR_BOUNDARY_FALLBACK_BUTTON_DEFAULT_CLASSES =
+  "mt-2 px-4 py-2 rounded bg-blue-500 text-white"
+
+usage example:
+
+```ts
+<ErrorBoundaryWrapper
+  resetButton={(reset) => (
+    <Link
+      onClick={() => reset()}
+      href="/"
+      className={twMerge(
+        ERROR_BOUNDARY_FALLBACK_BUTTON_DEFAULT_CLASSES,
+        "bg-black text-white"
+      )}
+    >
+      Go to Home Page
+    </Link>
+  )}
+>
+  {children}
+</ErrorBoundaryWrapper>

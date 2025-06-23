@@ -25,5 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function GameDetailLayout({ children }: Props) {
-    return <>{children}</>
+    return <>
+        {children}
+    </>
 }
