@@ -56,7 +56,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
         // Send verification email
         const verificationLink = `${CLIENT_BASE_URL}/verify-email?token=${token}`
 
-        sendVerificationEmail(email, verificationLink)
+        await sendVerificationEmail(email, verificationLink)
 
         return response
     } catch (err) {
