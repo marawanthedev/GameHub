@@ -6,19 +6,23 @@ import { Toaster } from 'sonner';
 import { Inter } from 'next/font/google'
 import { GTMConsentHandler } from "./components/GtmConsentHandler";
 import { ConsentBanner } from "./components/ConsentBanner";
+import * as Sentry from '@sentry/nextjs';
+import type { Metadata } from 'next';
 
-
+export function generateMetadata(): Metadata {
+  return {
+    title: 'GameHub - Premium Game Store',
+    description: 'Premium Game Store',
+    other: {
+      ...Sentry.getTraceData()
+    }
+  };
+}
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
 })
-
-
-export const metadata = {
-  title: 'GameHub - Premium Game Store',
-  description: 'Premium Game Store',
-}
 
 
 export default async function RootLayout({

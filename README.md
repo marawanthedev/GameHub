@@ -254,3 +254,27 @@ To improve perceived performance and UX during page transitions:
 
 ```tsx
 <AppLink href="/dashboard">Go to Dashboard</AppLink>
+
+
+
+## 🧠 Error Monitoring with Sentry
+
+This project integrates [Sentry](https://sentry.io/) for robust error tracking, even though we're hosted on [Vercel](https://vercel.com/). Here's why:
+
+###  Why Sentry When We Already Use Vercel?
+
+While Vercel provides basic runtime and build logs, it doesn't offer full error observability or tracing across the frontend and backend. Sentry fills that gap with:
+
+- **Full stack traces** with source maps — helping pinpoint the exact file and line number where errors occur
+- **Error grouping and deduplication** — Sentry intelligently groups similar errors together
+- **Frontend error monitoring** — catches errors from the browser (e.g. network issues, component crashes)
+- **Performance monitoring** — tracks slow pages, API latency, and rendering bottlenecks
+- **Contextual info** — includes request data, user session breadcrumbs, and console logs
+- **Deployment awareness** — integrates with Vercel to correlate errors with git commits and deployments
+- **Alerting** — notify your team via Slack, email, or other channels when a critical error happens
+
+###  What’s Tracked with Sentry
+
+- All unhandled exceptions in API routes and server-side code
+- Client-side errors in React components
+

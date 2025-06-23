@@ -17,6 +17,7 @@ jobs:
         FROM_EMAIL: ${{secrets.FROM_EMAIL}}
         RESEND_API_KEY: ${{secrets.RESEND_API_KEY}}
         RESEND_SIGNING_SECRET: ${{secrets.RESEND_SIGNING_SECRET}}
+        SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
         JWT_SECRET: ${{secrets.JWT_SECRET}}
         DATABASE_URL: ${{secrets.DATABASE_URL}}
         
