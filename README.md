@@ -278,3 +278,12 @@ While Vercel provides basic runtime and build logs, it doesn't offer full error 
 - All unhandled exceptions in API routes and server-side code
 - Client-side errors in React components
 
+## 🛠 Global Error Listener
+
+This project includes a `GlobalErrorListener` component that listens for global browser errors such as:
+
+- `window.onerror`
+- `window.onunhandledrejection`
+
+Its primary purpose is to catch unexpected client-side runtime errors and surface them to the user through a toast notification using the `sonner` library. This improves UX by giving users immediate feedback that something went wrong — even if the UI doesn't visibly break.
+

@@ -8,6 +8,7 @@ import { GTMConsentHandler } from "./components/GtmConsentHandler";
 import { ConsentBanner } from "./components/ConsentBanner";
 import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
+import GlobalErrorListener from "./components/GlobalErrorListner";
 
 export function generateMetadata(): Metadata {
   return {
@@ -30,6 +31,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" className={inter.variable}>
       <body
@@ -41,7 +43,7 @@ export default async function RootLayout({
         <ConsentBanner />
         {children}
         <Footer />
-
+        <GlobalErrorListener />
       </body>
     </html>
   );

@@ -42,6 +42,7 @@ export default function Home() {
           href="/games"
           className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#0d1117]"
           aria-label="Browse available games"
+
         >
           Browse Games
         </a>
