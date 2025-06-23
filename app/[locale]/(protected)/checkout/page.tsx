@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { useCartStore } from '../../stores/cart'
+import { useCartStore } from '../../../stores/cart'
 import { toast } from 'sonner'
-import { GTM_EVENTS, trackEvent } from '../../lib/gtm'
+import { GTM_EVENTS, trackEvent } from '../../../lib/gtm'
 
 export default function CheckoutPage() {
     const [loading, setLoading] = useState(true)

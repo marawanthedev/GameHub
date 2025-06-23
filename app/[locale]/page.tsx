@@ -1,7 +1,7 @@
 // app/page.tsx
 
-import { HomepageSkeleton } from "./types/contentful"
-import { contenfulClient } from './lib/contentful';
+import { HomepageSkeleton } from "../types/contentful"
+import { contenfulClient } from '../lib/contentful';
 
 export default async function Home() {
   const { items } = await contenfulClient.getEntries<HomepageSkeleton>({

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useCartStore } from '@/app/stores/cart';
-import { GTM_EVENTS, trackEvent } from '../../lib/gtm';
+import { GTM_EVENTS, trackEvent } from '../../../lib/gtm';
 import AppLink from '@/app/components/AppLink';
 
 export default function CartPage() {

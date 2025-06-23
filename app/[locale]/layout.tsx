@@ -1,14 +1,14 @@
 
 import "./globals.css";
-import { Navbar } from "./components/Navbar";
-import { Footer } from "./components/Footer";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import { Toaster } from 'sonner';
 import { Inter } from 'next/font/google'
-import { GTMConsentHandler } from "./components/GtmConsentHandler";
-import { ConsentBanner } from "./components/ConsentBanner";
+import { GTMConsentHandler } from "../components/GtmConsentHandler";
+import { ConsentBanner } from "../components/ConsentBanner";
 import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
-import GlobalErrorListener from "./components/GlobalErrorListner";
+import GlobalErrorListener from "../components/GlobalErrorListner";
 
 export function generateMetadata(): Metadata {
   return {
