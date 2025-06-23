@@ -349,3 +349,92 @@ usage example:
 >
   {children}
 </ErrorBoundaryWrapper>
+```ts
+
+## 🌍 Internationalization (i18n) Strategy
+
+This application uses the **Next.js App Router** with full support for internationalization (i18n). Two locales are currently supported:
+
+- `en-US` (English – default)
+- `de` (German)
+
+### 🗂️ Folder Structure
+
+The app routes are structured under a dynamic `[locale]` segment:
+
+app/
+[locale]/
+page.tsx
+layout.tsx
+
+
+
+This structure enables clean, locale-prefixed URLs like:
+
+- `/en-US`
+- `/de`
+- `/en-US/games`
+- `/de/games`
+
+---
+
+### 🔁 Base URL Redirection
+
+To ensure a consistent user experience and improve SEO, the root URL `/` is automatically redirected to the default locale `/en-US`.
+
+This is achieved via **Next.js Middleware** at the edge:
+
+```ts
+// middleware.ts
+import { NextResponse } from 'next/server';
+
+export function middleware(req) {
+  const { pathname } = req.nextUrl;
+
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/en-US', req.url));
+  }
+
+  return NextResponse.next();
+}
+```ts
+
+
+## 🔗 Centralized Locale-Aware Link Handling with AppLink
+
+To ensure consistent and reliable navigation across different languages, this project uses a centralized component called `AppLink` for all internal routing.
+
+Instead of using the default `<Link>` component from Next.js directly throughout the app, `AppLink` acts as a wrapper that intelligently manages locale-aware URLs.
+
+### What It Does
+
+- **Automatically prefixes URLs with the active locale**  
+  For example, navigating to `/games` while the selected language is German (`de`) will route the user to `/de/games`.
+
+- **Prevents incorrect or double-prefixed URLs**  
+  It guards against mistakes like `/de/de/games` by checking and cleaning the URL before rendering the link.
+
+- **Keeps the user in their current language**  
+  Whether they’re browsing in English or German, clicking a link through `AppLink` ensures they stay within that locale context.
+
+- **Improves user experience with feedback**  
+  When navigating to a new page, `AppLink` optionally shows a loading indicator if the transition takes more than a short moment, giving the user real-time feedback.
+
+- **Centralizes navigation logic**  
+  By funneling all internal navigation through `AppLink`, the app has a single source of truth for handling routing behavior. This makes the logic easier to maintain and consistent across the codebase.
+
+### Why This Matters
+
+Handling language-specific routing manually across many files can lead to inconsistencies, bugs, and confusing navigation behavior — especially when scaling up to more languages. By consolidating this into one component (`AppLink`), we:
+
+- Simplify the development experience
+- Make all links future-proof for additional locales
+- Ensure users never leave their selected language unintentionally
+- Reduce duplication and error-prone logic
+
+### Current Status
+
+At present, the `AppLink` component plays a core role in the multilingual architecture of the app. It is used across the navigation bar, page links, and all user-facing internal navigation.
+
+As more languages are added or routing rules evolve, updates only need to happen in `AppLink`, making internationalization more scalable and robust.
+
