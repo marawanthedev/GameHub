@@ -1,7 +1,6 @@
 // app/api/auth/signup/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import bcrypt from 'bcrypt'
-import crypto from 'crypto'
+import bcrypt from 'bcryptjs'
 import { prisma } from '@/app/lib/prisma/client'
 import { CLIENT_BASE_URL, JWT_SECRET } from '@/app/constants'
 import { ApiResponse, SuccessfulApiResponse } from '@/app/types/api'
@@ -22,19 +21,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
             data: { email, password: hashed }
         })
 
-        // Generate a verification token
-        const verificationToken = crypto.randomBytes(32).toString('hex')
-        const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24) // 24 hours
-
-
-        await prisma.verificationToken.create({
-            data: {
-                token: verificationToken,
-                userId: user.id,
-                expiresAt
-            }
-        })
-
         const secret = new TextEncoder().encode(JWT_SECRET)
 
         const token = await new SignJWT({ userId: user.id })
@@ -42,6 +28,18 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
             .setIssuedAt()
             .setExpirationTime('7d')
             .sign(secret)
+
+        const verificationTokenExpiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24) // 24 hours
+
+
+
+        await prisma.verificationToken.create({
+            data: {
+                token: token,
+                userId: user.id,
+                expiresAt: verificationTokenExpiresAt
+            }
+        })
 
 
         // Set cookie
@@ -56,7 +54,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
 
 
         // Send verification email
-        const verificationLink = `${CLIENT_BASE_URL}/verify-email?token=${verificationToken}`
+        const verificationLink = `${CLIENT_BASE_URL}/verify-email?token=${token}`
+
         sendVerificationEmail(email, verificationLink)
 
         return response

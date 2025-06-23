@@ -13,6 +13,7 @@ export default function SignUpForm() {
         { success: false, message: '' }
     )
 
+
     useEffect(() => {
 
         if (!state.success) {

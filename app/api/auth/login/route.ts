@@ -1,6 +1,5 @@
-// app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs'; // for edge compatibility
 import { JWT_SECRET } from '@/app/constants';
 import { prisma } from '@/app/lib/prisma/client';
 import { ApiResponse, SuccessfulApiResponse } from '@/app/types/api';
