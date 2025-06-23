@@ -26,14 +26,11 @@ const inter = Inter({
 })
 
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children, params }: { children: React.ReactNode, params: { locale: string } }) {
+
 
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang={params.locale} className={inter.variable}>
       <body
         className={`antialiased font-sans`}
       >
@@ -42,7 +39,7 @@ export default async function RootLayout({
         <ConsentBanner />
         {/* to allow error boundary takes remaining space to avoid buggy layout */}
         <div className="flex flex-col align-between min-h-screen">
-          <Navbar />
+          <Navbar locale={params.locale} />
           {children}
           <Footer />
         </div>
