@@ -1,4 +1,4 @@
-import Link from "next/link"
+import AppLink from "./AppLink"
 
 export function Footer() {
     return (
@@ -8,25 +8,25 @@ export function Footer() {
                     <div>
                         <h4 className="text-white text-sm font-semibold mb-4">Company</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="#" className="hover:text-white">About</Link></li>
-                            <li><Link href="#" className="hover:text-white">Careers</Link></li>
-                            <li><Link href="#" className="hover:text-white">Press</Link></li>
+                            <li><AppLink href="#" className="hover:text-white">About</AppLink></li>
+                            <li><AppLink href="#" className="hover:text-white">Careers</AppLink></li>
+                            <li><AppLink href="#" className="hover:text-white">Press</AppLink></li>
                         </ul>
                     </div>
                     <div>
                         <h4 className="text-white text-sm font-semibold mb-4">Resources</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="#" className="hover:text-white">Blog</Link></li>
-                            <li><Link href="#" className="hover:text-white">Support</Link></li>
-                            <li><Link href="#" className="hover:text-white">API</Link></li>
+                            <li><AppLink href="#" className="hover:text-white">Blog</AppLink></li>
+                            <li><AppLink href="#" className="hover:text-white">Support</AppLink></li>
+                            <li><AppLink href="#" className="hover:text-white">API</AppLink></li>
                         </ul>
                     </div>
                     <div>
                         <h4 className="text-white text-sm font-semibold mb-4">Legal</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="#" className="hover:text-white">Terms</Link></li>
-                            <li><Link href="#" className="hover:text-white">Privacy</Link></li>
-                            <li><Link href="#" className="hover:text-white">Cookies</Link></li>
+                            <li><AppLink href="#" className="hover:text-white">Terms</AppLink></li>
+                            <li><AppLink href="#" className="hover:text-white">Privacy</AppLink></li>
+                            <li><AppLink href="#" className="hover:text-white">Cookies</AppLink></li>
                         </ul>
                     </div>
                     <div className="col-span-2 sm:col-span-1">

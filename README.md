@@ -169,13 +169,6 @@ This project uses **GitHub Actions** to run automated linting and build checks o
   - Every pull request to any branch
 
 ---
-
-## 🔐 Authentication & Email Verification Flow
-
-This project implements a secure, custom authentication system with email verification using JWTs, Prisma, and Resend.
-
----
-
 ### ✅ Signup Flow
 
 1. User fills the **signup form** with email and password.
@@ -225,3 +218,39 @@ This project implements a secure, custom authentication system with email verifi
 
 ---
 
+
+
+## 🔐 Email Verification Flow
+
+This app enforces email verification for protected pages. Here’s how it works:
+
+- After signing up, users receive a verification email with a token link.
+- Until verified, their `user.verified` flag in the database remains `false`.
+- When attempting to access a protected route:
+  - If no token is found → redirected to `/login`
+  - If token is valid but user is not verified → redirected to `/email-not-verified`
+- The `/email-not-verified` page displays a friendly message prompting the user to check their inbox.
+
+### 📄 Route: `/email-not-verified`
+
+A fallback page rendered for users who are authenticated but not yet email-verified.
+
+- Path: `app/email-not-verified/page.tsx`
+- Shown automatically via logic in `ProtectedLayout`
+- Message: "Your email is not verified yet..."
+
+---
+
+## ⚡ Page Loading Feedback
+
+To improve perceived performance and UX during page transitions:
+
+- The app uses a custom `AppLink` component that wraps `<Link />` from Next.js.
+- When clicked:
+  - If navigation takes more than 100ms, a toast loading message appears using [`sonner`](https://sonner.emilkowal.dev/).
+  - When the route changes, the toast is dismissed immediately.
+
+### Example:
+
+```tsx
+<AppLink href="/dashboard">Go to Dashboard</AppLink>

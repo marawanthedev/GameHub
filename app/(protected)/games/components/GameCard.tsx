@@ -2,7 +2,7 @@ import { GameItem } from "@/app/types/rawg"
 import GameTags from "./GameTags"
 import Image from "next/image"
 import React from "react"
-import Link from "next/link"
+import AppLink from "@/app/components/AppLink"
 
 function GameCard({ game }: { game: GameItem }) {
     return <>
@@ -30,13 +30,13 @@ function GameCard({ game }: { game: GameItem }) {
             <GameTags platforms={game.platforms} />
         </div>
         <div className="w-full px-4">
-            <Link
+            <AppLink
                 href={`/games/${game.id}`}
                 className="inline-block w-full text-center mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition"
                 aria-label={`View details about ${game.name}`}
             >
                 View Details
-            </Link>
+            </AppLink>
         </div></>
 }
 

@@ -1,10 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useCartStore } from '@/app/stores/cart';
 import { GTM_EVENTS, trackEvent } from '../../lib/gtm';
+import AppLink from '@/app/components/AppLink';
 
 export default function CartPage() {
     const [loading, setLoading] = useState(true);
@@ -103,13 +103,14 @@ export default function CartPage() {
                         <span>${subtotal.toFixed(2)}</span>
                     </div>
 
-                    <Link
+                    <AppLink
+
                         href="/checkout"
                         className="inline-flex items-center justify-center w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         aria-label="Proceed to checkout"
                     >
                         Proceed to Checkout
-                    </Link>
+                    </AppLink>
                 </aside>
             </div>
 

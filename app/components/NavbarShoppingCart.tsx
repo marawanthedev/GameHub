@@ -1,8 +1,8 @@
 'use client'
 import { ShoppingCart } from "lucide-react"
-import Link from "next/link"
 import { useCartStore } from '@/app/stores/cart';
 import { useEffect, useState } from 'react';
+import AppLink from "./AppLink";
 
 export default function NavbarShoppingCart() {
     const cartItems = useCartStore((state) => state.items);
@@ -17,7 +17,7 @@ export default function NavbarShoppingCart() {
         }
     }, [itemCount]);
 
-    return (<Link href="/cart" className="relative hover:text-blue-400 transition ml-2">
+    return (<AppLink href="/cart" className="relative hover:text-blue-400 transition ml-2">
         <ShoppingCart className="w-6 h-6" />
         {itemCount > 0 && (
             <span
@@ -28,5 +28,5 @@ export default function NavbarShoppingCart() {
                 {itemCount}
             </span>
         )}
-    </Link>)
+    </AppLink>)
 }

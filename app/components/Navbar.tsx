@@ -1,7 +1,7 @@
 
-import Link from 'next/link'
 import NavBarActions from './NavBarActions'
 import NavbarShoppingCart from './NavbarShoppingCart';
+import AppLink from './AppLink';
 
 export async function Navbar() {
 
@@ -10,12 +10,12 @@ export async function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     <div className="flex items-center space-x-6">
-                        <Link href="/" className="text-xl font-bold text-white hover:text-blue-500 transition">
+                        <AppLink href="/" className="text-xl font-bold text-white hover:text-blue-500 transition">
                             GameHub
-                        </Link>
-                        <Link href="/games" className="hover:text-blue-400 transition text-sm">
+                        </AppLink>
+                        <AppLink href="/games" className="hover:text-blue-400 transition text-sm">
                             Games
-                        </Link>
+                        </AppLink>
                     </div>
 
                     <div className="flex items-center space-x-4">

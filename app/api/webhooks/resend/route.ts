@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json()
         const { type, data } = body
 
-
+        // this can be more secure by verifign through a secret signature but requires to move out of non edge env, will set it up later once i have time
         switch (type) {
             case 'email.delivered':
                 console.log(`✅ Delivered to ${data.email}`)
