@@ -26,3 +26,8 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false }, { status: 500 })
     }
 }
+
+
+export async function GET() {
+    return NextResponse.json({ status: 'Webhook is live' })
+}
