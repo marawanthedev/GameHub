@@ -438,3 +438,134 @@ At present, the `AppLink` component plays a core role in the multilingual archit
 
 As more languages are added or routing rules evolve, updates only need to happen in `AppLink`, making internationalization more scalable and robust.
 
+
+
+## 📊 Charts Overview
+
+This project includes reusable, accessible, and theme-ready chart components built with **Recharts**, tailored for modern dashboards and analytics use cases.
+
+---
+
+### 🚀 `BarChartComponent<T>`
+
+A responsive, reusable bar chart built with Recharts that supports generic data types, automatic coloring, and full customization of axes, bars, and tooltips.
+
+#### ✅ Features:
+- Fully typed using generics (`<T>`) — safely restricts `dataKey` to keys of your data
+- Responsive layout using `<ResponsiveContainer>`
+- Supports **uniform** or **per-bar** coloring modes (mutually exclusive)
+- **Auto-generates high-contrast colors** if no color is provided
+- Custom X-axis label rendering with **automatic multiline wrapping**
+- Optional tooltips with full styling control
+- Custom Y-axis support
+- Strong accessibility and error prevention through prop validation
+
+#### 🔧 Props
+
+| Prop             | Type                                                       | Description |
+|------------------|------------------------------------------------------------|-------------|
+| `data`           | `T[]`                                                      | Required dataset array |
+| `height`         | `number`                                                   | Height of the chart container (default: `400`) |
+| `width`          | `string`                                                   | Width of the container (default: `"100%"`) |
+| `colors`         | `string[]`                                                 | One color per bar (used if `uniformColor` is not provided) |
+| `uniformColor`   | `string`                                                   | Single color for all bars (used if `colors` is not provided) |
+| `xAxisProps`     | `{ dataKey: keyof T; angle: number; ... }`                 | Required `dataKey`, `angle`, and other optional X-axis props |
+| `yAxisProps`     | `YAxisProps` *(optional)*                                  | Props passed to `<YAxis>` |
+| `barProps`       | `BarProps & { dataKey: keyof T }`                          | Props for `<Bar>`, including which value to visualize |
+| `toolTipProps`   | `TooltipProps<string, string>` *(optional)*                | Props passed to `<Tooltip>` |
+
+#### ✨ Example
+
+```tsx
+type GameStats = { genre: string; rating: number };
+
+<BarChartComponent<GameStats>
+  data={[
+    { genre: "RPG", rating: 45 },
+    { genre: "FPS", rating: 30 },
+  ]}
+  height={300}
+  width="100%"
+  uniformColor="#3b82f6"
+  xAxisProps={{
+    dataKey: "genre",
+    angle: -15,
+    interval: 0,
+    tick: renderMultilineTick
+  }}
+  toolTipProps={{
+    contentStyle: {
+      backgroundColor: "black",
+      border: "none",
+      color: "white"
+    }
+  }}
+  barProps={{
+    dataKey: "rating",
+    barSize: 40,
+    radius: [4, 4, 0, 0]
+  }}
+/>
+```
+
+### 🥧 `PieChartComponent`
+
+A responsive and customizable pie chart built with Recharts. It supports highlighting the biggest and smallest segments, strong generic typing for data keys, custom colors, and styled tooltips.
+
+#### ✅ Features:
+- Fully responsive layout using `<ResponsiveContainer>`
+- 🔒 **Strong typing**: `dataKey` must point to a numeric field of your data
+- Optional highlight colors for **largest** and **smallest** segments
+- Supports `colors[]` array or auto-generated high-contrast fallback
+- Customizable tooltips with complete styling flexibility
+- Clean design, styled for dark backgrounds by default
+
+#### 🔧 Props
+
+| Prop                | Type                                                                  | Description |
+|---------------------|-----------------------------------------------------------------------|-------------|
+| `height`            | `number`                                                              | Height of the chart container (e.g. `400`) |
+| `width`             | `string` *(optional)*                                                 | Width of the chart container (default: `"100%"`) |
+| `pieProps`          | `PieProps & { data: T[]; dataKey: NumericKey<T>; nameKey?: keyof T }` | Main chart data and key bindings |
+| `toolTipProps`      | `TooltipProps<string, string>` *(optional)*                           | Custom styling for tooltips |
+| `colors`            | `string[]` *(optional)*                                               | Array of colors for slices. Must match number of data entries |
+| `biggestPieColor`   | `string` *(optional)*                                                 | Override color for the largest slice |
+| `smallestPieColor`  | `string` *(optional)*                                                 | Override color for the smallest slice |
+
+> ⚠️ If `dataKey` does not refer to a numeric property of `T`, a **compile-time error** will occur with a message like:  
+> `❌ Error: 'dataKey' must refer to a property of type number`
+
+---
+
+#### ✨ Example
+
+```tsx
+type GenreData = { genre: string; value: number };
+
+<PieChartComponent<GenreData>
+  height={400}
+  pieProps={{
+    data: [
+      { genre: "RPG", value: 35 },
+      { genre: "Shooter", value: 25 },
+      { genre: "Puzzle", value: 10 }
+    ],
+    dataKey: "value",
+    nameKey: "genre",
+    cx: "50%",
+    cy: "50%",
+    outerRadius: 120,
+    label: true
+  }}
+  biggestPieColor="#22c55e"
+  smallestPieColor="#ef4444"
+  toolTipProps={{
+    contentStyle: {
+      backgroundColor: "black",
+      border: "none",
+      color: "white",
+      fontSize: "14px"
+    }
+  }}
+/>
+```

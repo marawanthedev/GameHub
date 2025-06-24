@@ -1,5 +1,5 @@
 
-import { BarChartComponent, PieChartComponent, RadarChartComponent } from "@/app/components";
+import { BarChartComponent, PieChartComponent } from "@/app/components";
 import ErrorBoundaryWrapper from "@/app/components/ErrorBoundaryWrapper";
 import { getGenreDistribution2024, getPlatformUsage2024, getTopRatedGames2024 } from "@/app/lib/rawg-data";
 
@@ -11,6 +11,7 @@ export default async function TrendsPage() {
         getPlatformUsage2024(),
     ]);
 
+    const x: { name: string; value: number }[] = genres
     console.log({ topRated })
 
 
@@ -43,7 +44,7 @@ export default async function TrendsPage() {
                 </h2>
                 <div className="bg-[#161b22] p-6 rounded-2xl shadow-lg border border-[#30363d]">
                     <ErrorBoundaryWrapper>
-                        <PieChartComponent height={400} biggestPieColor="red" smallestPieColor="yellow" pieProps={{ data: genres }} toolTipProps={{ contentStyle: { backgroundColor: 'blue', border: 'none', color: 'white', fontSize: "14px" }, }} />
+                        <PieChartComponent<{ name: string, value: number }> height={400} biggestPieColor="red" smallestPieColor="yellow" pieProps={{ data: x, dataKey: "name" }} toolTipProps={{ contentStyle: { backgroundColor: 'blue', border: 'none', color: 'white', fontSize: "14px" }, }} />
                     </ErrorBoundaryWrapper>
                 </div>
             </section>
@@ -54,7 +55,17 @@ export default async function TrendsPage() {
                     Top Platforms
                 </h2>
                 <div className="bg-[#161b22] p-6 rounded-2xl shadow-lg border border-[#30363d]">
-                    <RadarChartComponent data={platforms} />
+
+                    <ErrorBoundaryWrapper>
+
+                        <BarChartComponent<{ platform: string, count: number }> barProps={{
+                            dataKey: 'count', label: {
+                                position: 'top',
+                                fill: 'white',
+                                fontSize: 12,
+                            }
+                        }} xAxisProps={{ dataKey: "platform", angle: 90, fontSize: 12, interval: 0 }} data={platforms} height={400} uniformColor="blue" />
+                    </ErrorBoundaryWrapper>
                 </div>
             </section>
         </div>

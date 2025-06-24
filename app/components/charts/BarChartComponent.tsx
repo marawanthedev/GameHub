@@ -18,66 +18,84 @@ import { generateHighContrastColors } from '@/app/util/generateHighContrastColor
 import isValidColor from '@/app/util/isValidColor';
 import renderMultilineTick from '@/app/util/renderMultiTick';
 
-// Mutually exclusive types
 type BarChartFixedColors = {
     colors: string[];
     uniformColor?: never;
 };
 
-type RequiredXAxisProps = {
-    dataKey: string;
+type RequiredXAxisProps<T> = {
+    dataKey: keyof T;
     angle: number;
 };
 
-type CustomXAxisProps = RequiredXAxisProps & Omit<Partial<XAxisProps>, keyof RequiredXAxisProps>;
+type CustomXAxisProps<T> = RequiredXAxisProps<T> &
+    Omit<Partial<XAxisProps>, keyof RequiredXAxisProps<T>>;
 
 type BarChartUniformColor = {
     colors?: never;
     uniformColor: string;
 };
 
-export type BarChartProps = {
+
+
+export type BarChartProps<T extends object> = {
+    data: T[];
+
+    xAxisProps: CustomXAxisProps<T>;
+
+    barProps: BarProps & {
+        dataKey: keyof T;
+    };
+
     height?: number;
-    width?: string,
-    data: { name: string; rating: number }[];
-    xAxisProps: CustomXAxisProps,
-    yAxisProps?: YAxisProps,
-    barProps: BarProps,
+    width?: string;
+    yAxisProps?: YAxisProps;
     toolTipProps?: TooltipProps<string, string>;
 } & (BarChartFixedColors | BarChartUniformColor);
 
 /**
  * BarChartComponent
  *
- * A flexible and accessible bar chart built with Recharts. It supports both uniform and per-bar coloring, customizable axes, and tooltips.
+ * A flexible and accessible bar chart built with Recharts. It supports both uniform and per-bar coloring,
+ * customizable axes, and tooltips.
  *
  * ## Features
+ * - **Generic support**: pass your own data type to ensure strict typing of axis and bar `dataKey` values.
  * - **Responsive layout** using `<ResponsiveContainer>`
  * - **High-contrast color generation** when no color props are provided
  * - **Mutually exclusive coloring modes**: either `colors[]` (per-bar) or `uniformColor` (same color for all bars)
  * - **Customizable X-axis** with enforced readability settings
  * - **Tooltip customization** via `toolTipProps`
  *
+ * ## Generic Type
+ * - `<T extends object>` — You must pass a data type for the chart, e.g.:
+ *   ```ts
+ *   type GameData = { name: string; rating: number }
+ *   ```
+ *
  * ## Props
- * - `height?: number` — Height of the chart container in pixels (default: 400)
- * - `width?: string` — Width of the chart container (default: "100%")
- * - `data: { name: string; rating: number }[]` — Required dataset to display; each object must include `name` and `rating`
- * - `xAxisProps: CustomXAxisProps` — Required props for the `<XAxis>`. Must include:
- *   - `dataKey`: string (required)
- *   - `angle`: number (required)
- *   - All other XAxisProps are optional and allowed
- * - `barProps: BarProps` — Props forwarded to the `<Bar>` element
- * - `toolTipProps?: TooltipProps<string, string>` — Optional tooltip customization
- * - `yAxisProps?: YAxisProps` — Forwarded to `<YAxisProps> element`
+ * - `data: T[]` — Required dataset to render. Each object must match your generic type.
+ * - `xAxisProps: { dataKey: keyof T; angle: number } & Partial<Omit<XAxisProps, 'dataKey' | 'angle'>>`
+ *     - Controls how the x-axis is rendered.
+ *     - `dataKey` must be a valid key of your data object.
+ *     - `angle` is required to define label tilt.
+ * - `barProps: BarProps & { dataKey: keyof T }`
+ *     - Props forwarded to the `<Bar>` component, including which value to visualize.
+ * - `toolTipProps?: TooltipProps<string, string>` — Optional tooltip customization.
+ * - `yAxisProps?: YAxisProps` — Props forwarded to `<YAxis>`.
+ * - `height?: number` — Chart height in pixels (default: 400).
+ * - `width?: string` — Chart width (default: "100%").
  *
  * ### Color Modes (mutually exclusive)
- * - `colors?: string[]` — A fixed array of colors, one per bar. Must match or exceed the length of `data`
- * - `uniformColor?: string` — A single color to be used for all bars. Cannot be used with `colors`
- * - **If neither `colors` nor `uniformColor` is provided, a high-contrast color palette will be auto-generated**
+ * - `colors?: string[]` — Array of bar colors (one per data point).
+ * - `uniformColor?: string` — Single color for all bars.
+ * - **If neither is provided**, a high-contrast palette will be generated automatically.
  *
  * ## Example
  * ```tsx
- * <BarChartComponent
+ * type GameData = { name: string; rating: number };
+ *
+ * <BarChartComponent<GameData>
  *   height={300}
  *   width="100%"
  *   data={[
@@ -98,6 +116,7 @@ export type BarChartProps = {
  *     }
  *   }}
  *   barProps={{
+ *     dataKey: "rating",
  *     barSize: 40,
  *     radius: [4, 4, 0, 0]
  *   }}
@@ -105,7 +124,8 @@ export type BarChartProps = {
  * ```
  */
 
-export const BarChartComponent = (props: BarChartProps) => {
+
+export function BarChartComponent<T extends object>(props: BarChartProps<T>) {
     const {
         height,
         data,

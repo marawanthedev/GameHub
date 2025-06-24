@@ -3,6 +3,7 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, PieProps, TooltipProps } from 'recharts';
 import { generateHighContrastColors } from '@/app/util/generateHighContrastColors';
 import isValidColor from '@/app/util/isValidColor';
+import { NumericKey } from "../../types/util"
 
 type PieChartFixedColors = {
     colors: string[],
@@ -12,14 +13,14 @@ type PieChartGeneratedColors = {
     colors?: never,
 }
 
-export type PieChartProps = {
+export type PieChartProps<T extends object> = {
     height?: number,
     width?: string,
     biggestPieColor?: string,
     smallestPieColor?: string,
-    pieProps: PieProps & { data: { name: string, value: number }[] },
+    pieProps: PieProps & { data: T[]; dataKey: NumericKey<T>; nameKey?: keyof T },
     toolTipProps?: TooltipProps<string, string>,
-} & (PieChartFixedColors | PieChartGeneratedColors)
+} & (PieChartFixedColors | PieChartGeneratedColors);
 
 
 /**
@@ -30,36 +31,48 @@ export type PieChartProps = {
  * and optionally allows highlighting the largest and/or smallest slices with specific colors.
  *
  * ## Features
- * - Uses `ResponsiveContainer` for responsive layout.
- * - Accepts either a `colors` array or a `baseColor` to generate distinct slice colors.
- * - Allows optional override of the biggest and smallest slice colors via `biggestPieColor` and `smallestPieColor`.
- * - Displays tooltips with customizable styling via `toolTipProps`.
- * - verifies that biggest slice / smallest slice color is an actual color and throws an error if it is not
- * - if colors explicity passed, it verifies that number of colors is equal to data entires otherwise it throws an error
+ * - 📐 Uses `ResponsiveContainer` for responsive layout
+ * - 🎨 Accepts either a `colors` array or generates high-contrast colors automatically
+ * - 🔺 Supports custom highlight colors for biggest/smallest slices
+ * - 💬 Displays tooltips with customizable styling via `toolTipProps`
+ * - 🔒 **Strongly typed**: ensures `dataKey` points to a `number` field of your data
+ * - ❌ Throws runtime errors for invalid color values or data binding issues
  *
  * ## Props
-*  - `height?: number` — Container height
- * - `width?: string` — Container width
- * - `pieProps: PieProps` — Recharts Pie props, must include `data: { name: string; value: number }[]`.
- * - `toolTipProps: TooltipProps` — Props passed directly to the Recharts `<Tooltip>` component.
- * - `colors?: string[]` — Fixed color set to use for slices. Mutually exclusive with `baseColor`.
- * - `baseColor?: string` — A single base color used to generate a distinct palette.
- * - `biggestPieColor?: string` — If provided, overrides the color of the slice with the highest value.
- * - `smallestPieColor?: string` — If provided, overrides the color of the slice with the lowest value.
+ * - `height?: number` — Container height (default: 400)
+ * - `width?: string` — Container width (default: `"100%"`)
+ * - `pieProps: PieProps & { data: T[]; dataKey: NumericKey<T>; nameKey?: keyof T }`  
+ *   - `data`: Dataset to visualize  
+ *   - `dataKey`: Must be a key of `T` whose value is a `number`  
+ *   - `nameKey`: Optional key of `T` to use as the name label for the pie slices
+ * - `toolTipProps?: TooltipProps<string, string>` — Optional tooltip customization
+ * - `colors?: string[]` — Optional array of per-slice colors (must match or exceed data length)
+ * - `biggestPieColor?: string` — Optional color override for the largest slice
+ * - `smallestPieColor?: string` — Optional color override for the smallest slice
  *
- * ## Performance Note
- * When `biggestPieColor` or `smallestPieColor` is used,
- * the component performs a full loop through `pieProps.data` to determine the max and min values.
- * While this has negligible impact on small datasets, it may introduce minor performance costs with large datasets.
+ * ## Type Safety
+ * - ✅ `dataKey` **must refer to a numeric property** on the type `T`
+ * - If not, TypeScript will throw a helpful type error:
+ *   ```
+ *   Type '"name"' is not assignable to type "❌ Error: 'dataKey' must refer to a property of type number"
+ *   ```
  *
  * ## Example Usage:
  * ```tsx
- * <PieChartComponent
- *   height="400px"
- *   baseColor="#3b82f6"
+ * type GenreData = { genre: string; value: number };
+ *
+ * <PieChartComponent<GenreData>
+ *   height={400}
+ *   pieProps={{
+ *     data: [
+ *       { genre: 'RPG', value: 30 },
+ *       { genre: 'FPS', value: 20 },
+ *     ],
+ *     dataKey: 'value',
+ *     nameKey: 'genre'
+ *   }}
  *   biggestPieColor="#ef4444"
  *   smallestPieColor="#6b7280"
- *   pieProps={{ data: [{ name: "RPG", value: 30 }, { name: "FPS", value: 20 }] }}
  *   toolTipProps={{
  *     contentStyle: {
  *       backgroundColor: 'black',
@@ -71,7 +84,8 @@ export type PieChartProps = {
  * ```
  */
 
-export const PieChartComponent = (props: PieChartProps) => {
+
+export const PieChartComponent = <T extends object>(props: PieChartProps<T>) => {
     const { pieProps, toolTipProps, colors, biggestPieColor, smallestPieColor, height, width } = props;
 
 
@@ -103,11 +117,10 @@ export const PieChartComponent = (props: PieChartProps) => {
 
 
     return (
-        <ResponsiveContainer width={width || "100%"} height={height || 400}>
+        <ResponsiveContainer width={width || '100%'} height={height || 400}>
             <PieChart>
                 <Pie
-                    dataKey="value"
-                    nameKey="name"
+                    nameKey={pieProps.nameKey as string}
                     outerRadius={150}
                     fill="#8884d8"
                     label={{ fill: '#c9d1d9' }}
@@ -117,7 +130,7 @@ export const PieChartComponent = (props: PieChartProps) => {
                         <Cell key={index} fill={pieColors[index]} />
                     ))}
                 </Pie>
-                <Tooltip contentStyle={{ backgroundColor: 'black', border: 'none', color: 'white' }}  {...toolTipProps} />
+                <Tooltip contentStyle={{ backgroundColor: 'black', border: 'none', color: 'white' }} {...toolTipProps} />
             </PieChart>
         </ResponsiveContainer>
     );
