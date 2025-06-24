@@ -24,7 +24,7 @@ type BarChartFixedColors = {
 };
 
 type RequiredXAxisProps<T> = {
-    dataKey: keyof T;
+    dataKey: Extract<keyof T, string>;
     angle: number;
 };
 

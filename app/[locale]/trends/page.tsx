@@ -44,7 +44,7 @@ export default async function TrendsPage() {
                 </h2>
                 <div className="bg-[#161b22] p-6 rounded-2xl shadow-lg border border-[#30363d]">
                     <ErrorBoundaryWrapper>
-                        <PieChartComponent<{ name: string, value: number }> height={400} biggestPieColor="red" smallestPieColor="yellow" pieProps={{ data: x, dataKey: "name" }} toolTipProps={{ contentStyle: { backgroundColor: 'blue', border: 'none', color: 'white', fontSize: "14px" }, }} />
+                        <PieChartComponent<{ name: string, value: number }> height={400} biggestPieColor="red" smallestPieColor="yellow" pieProps={{ data: x, dataKey: "value" }} toolTipProps={{ contentStyle: { backgroundColor: 'blue', border: 'none', color: 'white', fontSize: "14px" }, }} />
                     </ErrorBoundaryWrapper>
                 </div>
             </section>
