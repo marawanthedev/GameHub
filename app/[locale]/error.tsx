@@ -15,10 +15,10 @@ export default function GlobalError({
         Sentry.captureException(error, {
             tags: { locale: params.locale },
         });
-    }, [error, params.locale]);
+    }, [error, params?.locale]);
 
     return (
-        <html lang={params.locale}>
+        <html lang={params?.locale || 'en'}>
             <body>
                 <NextError statusCode={0} />
             </body>

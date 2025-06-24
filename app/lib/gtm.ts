@@ -1,4 +1,4 @@
-import { getTimeOfDay } from "./time";
+import { getTimeOfDay } from "../util/time";
 
 export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || '';
 export const pageview = (url: string) => {

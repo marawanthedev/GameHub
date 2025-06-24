@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner';
 import { GameDetailsSkeleton } from './components/GameDetailsSkeleton'
 import { GTM_EVENTS, trackEvent } from '@/app/lib/gtm'
-import { getTimeOfDay } from '@/app/lib/time'
+import { getTimeOfDay } from '@/app/util/time'
 import AppLink from '@/app/components/AppLink'
 import ErrorBoundaryWrapper, { ERROR_BOUNDARY_FALLBACK_BUTTON_DEFAULT_CLASSES } from '@/app/components/ErrorBoundaryWrapper'
 import { twMerge } from 'tailwind-merge'

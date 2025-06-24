@@ -1,4 +1,3 @@
-// lib/rawg.ts
 import axios from 'axios'
 
 const rawg = axios.create({

@@ -19,6 +19,9 @@ export async function Navbar({ locale }: NavbarProps) {
                         <AppLink href={`/${locale}/games`} className="hover:text-blue-400 transition text-sm">
                             Games
                         </AppLink>
+                        <AppLink href={`/${locale}/trends`} className="hover:text-blue-400 transition text-sm">
+                            Trends
+                        </AppLink>
                     </div>
 
                     <div className="flex items-center space-x-4">
