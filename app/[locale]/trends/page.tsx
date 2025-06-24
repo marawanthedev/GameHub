@@ -1,3 +1,4 @@
+
 import { BarChartComponent, PieChartComponent, RadarChartComponent } from "@/app/components";
 import ErrorBoundaryWrapper from "@/app/components/ErrorBoundaryWrapper";
 import { getGenreDistribution2024, getPlatformUsage2024, getTopRatedGames2024 } from "@/app/lib/rawg-data";
@@ -9,6 +10,8 @@ export default async function TrendsPage() {
         getGenreDistribution2024(),
         getPlatformUsage2024(),
     ]);
+
+    console.log({ topRated })
 
 
     return <><main className="min-h-screen bg-[#0d1117] text-white px-4 py-16">
@@ -22,7 +25,13 @@ export default async function TrendsPage() {
                 </h2>
                 <div className="bg-[#161b22] p-6 min-h-screen rounded-2xl shadow-lg border border-[#30363d]">
                     <ErrorBoundaryWrapper>
-                        <BarChartComponent barProps={{ dataKey }} xAxisProps={{ data }} data={topRated} height={400} uniformColor="red" dataKey="rating" />
+                        <BarChartComponent barProps={{
+                            dataKey: 'rating', label: {
+                                position: 'top',
+                                fill: 'white',
+                                fontSize: 12,
+                            }
+                        }} xAxisProps={{ dataKey: "name", angle: 90, fontSize: 12, interval: 0 }} data={topRated} height={400} uniformColor="blue" />
                     </ErrorBoundaryWrapper>
                 </div>
             </section>

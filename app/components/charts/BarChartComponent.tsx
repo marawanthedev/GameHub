@@ -11,10 +11,12 @@ import {
     Cell,
     TooltipProps,
     BarProps,
-    XAxisProps
+    XAxisProps,
+    YAxisProps
 } from 'recharts';
 import { generateHighContrastColors } from '@/app/util/generateHighContrastColors';
 import isValidColor from '@/app/util/isValidColor';
+import renderMultilineTick from '@/app/util/renderMultiTick';
 
 // Mutually exclusive types
 type BarChartFixedColors = {
@@ -25,8 +27,6 @@ type BarChartFixedColors = {
 type RequiredXAxisProps = {
     dataKey: string;
     angle: number;
-    interval: number;
-    tick: { fill: string };
 };
 
 type CustomXAxisProps = RequiredXAxisProps & Omit<Partial<XAxisProps>, keyof RequiredXAxisProps>;
@@ -41,6 +41,7 @@ export type BarChartProps = {
     width?: string,
     data: { name: string; rating: number }[];
     xAxisProps: CustomXAxisProps,
+    yAxisProps?: YAxisProps,
     barProps: BarProps,
     toolTipProps?: TooltipProps<string, string>;
 } & (BarChartFixedColors | BarChartUniformColor);
@@ -48,35 +49,58 @@ export type BarChartProps = {
 /**
  * BarChartComponent
  *
- * A customizable bar chart using Recharts with support for:
- * - Manually defined or auto-generated high contrast bar colors
- * - Optionally assign unique color to biggest/smallest bar
- * - Uniform color setting to use a single color for all bars
- * - Tooltip styling via toolTipProps
+ * A flexible and accessible bar chart built with Recharts. It supports both uniform and per-bar coloring, customizable axes, and tooltips.
  *
  * ## Features
- * - Responsive layout via Recharts ResponsiveContainer
- * - Validates color count matches data length if colors[] is passed
- * - Validates color string validity for override props
- * - Uniform color mode disables individual color overrides
+ * - **Responsive layout** using `<ResponsiveContainer>`
+ * - **High-contrast color generation** when no color props are provided
+ * - **Mutually exclusive coloring modes**: either `colors[]` (per-bar) or `uniformColor` (same color for all bars)
+ * - **Customizable X-axis** with enforced readability settings
+ * - **Tooltip customization** via `toolTipProps`
  *
  * ## Props
- * - `height?: number` — Container height
- * - `width?: string` — Container width
- * - `data: { name: string; value: number }[]` — Dataset
- * - `colors?: string[]` — Optional fixed colors, one per bar
- * - `xAxisProps: CustomXAxisProps` — Props passed to `<XAxis>`
- * - `uniformColor?: string` — If passed then used as color for all bars
- * - `toolTipProps` — Props passed to `<Tooltip>`
- * - `barChartProps` — Props passed to `<BarChart>`
+ * - `height?: number` — Height of the chart container in pixels (default: 400)
+ * - `width?: string` — Width of the chart container (default: "100%")
+ * - `data: { name: string; rating: number }[]` — Required dataset to display; each object must include `name` and `rating`
+ * - `xAxisProps: CustomXAxisProps` — Required props for the `<XAxis>`. Must include:
+ *   - `dataKey`: string (required)
+ *   - `angle`: number (required)
+ *   - All other XAxisProps are optional and allowed
+ * - `barProps: BarProps` — Props forwarded to the `<Bar>` element
+ * - `toolTipProps?: TooltipProps<string, string>` — Optional tooltip customization
+ * - `yAxisProps?: YAxisProps` — Forwarded to `<YAxisProps> element`
  *
- * ## Example:
+ * ### Color Modes (mutually exclusive)
+ * - `colors?: string[]` — A fixed array of colors, one per bar. Must match or exceed the length of `data`
+ * - `uniformColor?: string` — A single color to be used for all bars. Cannot be used with `colors`
+ * - **If neither `colors` nor `uniformColor` is provided, a high-contrast color palette will be auto-generated**
+ *
+ * ## Example
  * ```tsx
  * <BarChartComponent
- *   height="400px"
- *   uniformColor="#3b82f6"
- *   data={[{ name: "RPG", value: 30 }, { name: "FPS", value: 20 }]}
- *   toolTipProps={{ contentStyle: { backgroundColor: 'black', border: 'none', color: 'white' } }}
+ *   height={300}
+ *   width="100%"
+ *   data={[
+ *     { name: "RPG", rating: 45 },
+ *     { name: "FPS", rating: 30 },
+ *   ]}
+ *   xAxisProps={{
+ *     dataKey: "name",
+ *     angle: -15,
+ *     interval: 0,
+ *     tick: { fill: "#c9d1d9" }
+ *   }}
+ *   toolTipProps={{
+ *     contentStyle: {
+ *       backgroundColor: "black",
+ *       border: "none",
+ *       color: "white"
+ *     }
+ *   }}
+ *   barProps={{
+ *     barSize: 40,
+ *     radius: [4, 4, 0, 0]
+ *   }}
  * />
  * ```
  */
@@ -90,7 +114,8 @@ export const BarChartComponent = (props: BarChartProps) => {
         uniformColor,
         width,
         xAxisProps,
-        barProps
+        barProps,
+        yAxisProps
     } = props;
 
 
@@ -118,11 +143,11 @@ export const BarChartComponent = (props: BarChartProps) => {
 
 
     return (
-        <ResponsiveContainer width={width || "100%"} height={height || 400}>
-            <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 40 }}  >
+        <ResponsiveContainer width={width || "100%"} height={height || "100%"}>
+            <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 80 }} >
                 <CartesianGrid stroke="#30363d" />
-                <XAxis {...xAxisProps} />
-                <YAxis tick={{ fill: '#c9d1d9' }} />
+                <XAxis width={"100%"} tickMargin={10} tick={renderMultilineTick} {...xAxisProps} />
+                <YAxis tick={{ fill: '#c9d1d9' }}  {...yAxisProps} />
                 <Tooltip {...toolTipProps} />
                 <Bar  {...barProps}>
                     {data.map((_, i) => (
