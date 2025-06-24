@@ -24,7 +24,7 @@ export default async function TrendsPage() {
                 <h2 className="text-2xl font-semibold text-blue-400 border-b border-[#30363d] pb-2">
                     Top Rated Games (2024)
                 </h2>
-                <div className="bg-[#161b22] p-6 min-h-screen rounded-2xl shadow-lg border border-[#30363d]">
+                <div className="bg-[#161b22] p-6 rounded-2xl shadow-lg border border-[#30363d]">
                     <ErrorBoundaryWrapper>
                         <BarChartComponent barProps={{
                             dataKey: 'rating', label: {
