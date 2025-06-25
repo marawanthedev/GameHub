@@ -13,7 +13,9 @@ export function middleware(req: NextRequest) {
     }
 
     if (pathname.startsWith('/en-US') || pathname.startsWith('/de')) {
-        return NextResponse.next();
+        const res = NextResponse.next()
+        res.headers.set('x-pathname', pathname)
+        return res
     }
 
     if (pathname === '/') {

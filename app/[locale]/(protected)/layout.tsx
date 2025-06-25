@@ -2,17 +2,26 @@ import { cookies, headers } from 'next/headers'
 import { prisma } from '@/app/lib/prisma/client'
 import { jwtVerify } from 'jose'
 import { redirect } from 'next/navigation'
+import { normalizeHrefWithLocale } from '@/app/util/normalizeHref'
 
 export default async function ProtectedLayout({
-    children,
+    children, params
 }: {
-    children: React.ReactNode
+    children: React.ReactNode,
+    params: { locale: string }
 }) {
     const token = cookies().get('token')?.value
     const pathname = headers().get('x-pathname') || '/'
+    const locale = params.locale
+    const normalizedCallbackUrl = normalizeHrefWithLocale(pathname, locale)
+    const loginHref = normalizeHrefWithLocale("/login", locale)
+    // const loginHref = '/en-US/games'
+
+
+    console.log({ locale, normalizedCallbackUrl, pathname })
 
     if (!token) {
-        redirect(`/login?callbackUrl=${encodeURIComponent(pathname)}`)
+        redirect(`${loginHref}?callbackUrl=${encodeURIComponent(normalizedCallbackUrl)}`)
     }
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET)
@@ -23,7 +32,7 @@ export default async function ProtectedLayout({
         payload = verified.payload
     } catch (err) {
         console.error((err as Error).message)
-        redirect(`/login?callbackUrl=${encodeURIComponent(pathname)}`)
+        redirect(`${loginHref}?callbackUrl=${encodeURIComponent(normalizedCallbackUrl)}`)
     }
 
     const userId = payload.userId as string
@@ -33,7 +42,7 @@ export default async function ProtectedLayout({
     })
 
     if (!user) {
-        redirect(`/login?callbackUrl=${encodeURIComponent(pathname)}`)
+        redirect(`${loginHref}?callbackUrl=${encodeURIComponent(normalizedCallbackUrl)}`)
     }
 
     if (user?.verified === false) {

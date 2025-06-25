@@ -3,15 +3,18 @@
 import { useState, useCallback } from 'react'
 import { GTM_EVENTS, GTM_EVENTS_CATEGORIES, trackEvent } from '@/app/lib/gtm'
 import { z } from 'zod'
+import { useSearchParams } from 'next/navigation'
 
 const loginSchema = z.object({
     email: z.string().email(),
     password: z.string().min(6),
 })
 
-export default function LoginForm() {
+export default function LoginForm({ locale }: { locale: string }) {
     const [errors, setErrors] = useState<{ email?: string[]; password?: string[] }>({})
     const [generalError, setGeneralError] = useState('')
+    const searchParams = useSearchParams(); // ✅ use search params
+    const callbackUrl = searchParams.get('callbackUrl') || `/${locale}/games`;
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -62,7 +65,7 @@ export default function LoginForm() {
             category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
         })
 
-        window.location.href = '/games';
+        window.location.href = callbackUrl;
     }
 
     const handleLoginAttempt = useCallback(() => {
