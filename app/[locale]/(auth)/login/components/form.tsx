@@ -55,7 +55,7 @@ export default function LoginForm({ locale }: { locale: string }) {
                 body: JSON.stringify({ email, password }),
             })
 
-            const data = await res.json()
+            const data: { success: boolean, verifiedUser: boolean, error?: string } = await res.json()
 
             if (!res.ok || !data.success) {
                 setGeneralError(data.error || 'Login failed')
@@ -74,8 +74,7 @@ export default function LoginForm({ locale }: { locale: string }) {
                 category: GTM_EVENTS_CATEGORIES.AUTHENTICATION,
             })
 
-            console.log(data)
-            if (data.isVerifiedUser) {
+            if (data.verifiedUser) {
                 window.location.href = redirctToUrl
             }
             else {
