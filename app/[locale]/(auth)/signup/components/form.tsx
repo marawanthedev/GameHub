@@ -1,19 +1,12 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { z } from 'zod'
 import { Loader } from 'lucide-react'
 import { GTM_EVENTS, GTM_EVENTS_CATEGORIES, trackEvent } from '@/app/lib/gtm'
 import { API_BASE_URL } from '@/app/constants'
+import { signupSchema } from '@/app/schema/signup'
 
-const signupSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
-    confirmPassword: z.string().min(6),
-}).refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-})
+
 
 export default function SignUpForm({ locale }: { locale: string }) {
     const [isLoading, setIsLoading] = useState(false)

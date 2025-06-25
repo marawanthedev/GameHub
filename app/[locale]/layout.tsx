@@ -1,7 +1,7 @@
 
 import "../globals.css";
 import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
+import { MemoizedFooter } from "../components/Footer";
 import { Toaster } from 'sonner';
 import { Inter } from 'next/font/google'
 import { GTMConsentHandler } from "../components/GtmConsentHandler";
@@ -41,7 +41,7 @@ export default function RootLayout({ children, params }: { children: React.React
         <div className="flex flex-col align-between min-h-screen">
           <Navbar locale={params.locale} />
           {children}
-          <Footer />
+          <MemoizedFooter />
         </div>
         <GlobalErrorListener />
       </body>

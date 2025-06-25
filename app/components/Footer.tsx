@@ -1,3 +1,4 @@
+import React from "react"
 import AppLink from "./AppLink"
 
 export function Footer() {
@@ -55,3 +56,5 @@ export function Footer() {
         </footer>
     )
 }
+
+export const MemoizedFooter = React.memo(Footer)

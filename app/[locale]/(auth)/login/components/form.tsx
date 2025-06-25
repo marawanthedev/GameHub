@@ -1,16 +1,12 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { z } from 'zod'
 import { useSearchParams } from 'next/navigation'
 import { Loader } from 'lucide-react'
 import { GTM_EVENTS, GTM_EVENTS_CATEGORIES, trackEvent } from '@/app/lib/gtm'
 import { normalizeHrefWithLocale } from '@/app/util/normalizeHref'
+import { loginSchema } from '@/app/schema/login'
 
-const loginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
-})
 
 export default function LoginForm({ locale }: { locale: string }) {
     const [isLoading, setIsLoading] = useState(false)
