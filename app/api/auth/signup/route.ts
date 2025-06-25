@@ -42,16 +42,10 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
         })
 
 
-        // Set cookie
         const response: NextResponse<SuccessfulApiResponse> = NextResponse.json({ success: true, message: 'Signup successful. Please check your email to verify your account.' })
-        response.cookies.set('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 7 * 24 * 60 * 60,
-            path: '/',
-        })
 
+
+        // no cookie setting as we need to verify email first 
 
         // Send verification email
         const verificationLink = `${CLIENT_BASE_URL}/verify-email?token=${token}`

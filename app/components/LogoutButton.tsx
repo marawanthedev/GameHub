@@ -2,15 +2,18 @@
 
 import { useRouter } from 'next/navigation'
 import { useCartStore } from '../stores/cart';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 
 export default function LogoutButton() {
     const router = useRouter()
     const clearCart = useCartStore((state) => state.clearCart);
 
-    const [isPending, startTransition] = useTransition();
+    const [, startTransition] = useTransition();
+    const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false)
 
     const handleLogout = async () => {
+        setIsLoggingOut(true)
+
         await fetch('/api/auth/logout', {
             method: 'POST',
             credentials: 'include',
@@ -20,7 +23,8 @@ export default function LogoutButton() {
         startTransition(() => {
             clearCart();
         });
-        router.refresh() // refreshes to reflect logout state
+
+        router.refresh()
     }
 
     return (
@@ -28,7 +32,7 @@ export default function LogoutButton() {
             onClick={handleLogout}
             className="text-sm px-4 py-2 text-white hover:text-red-400 transition"
         >
-            {isPending ? '...Logging out' : 'Logout'}
+            {isLoggingOut ? '...Logging out' : 'Logout'}
         </button>
     )
 }

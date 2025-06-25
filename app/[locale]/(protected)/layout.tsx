@@ -15,10 +15,7 @@ export default async function ProtectedLayout({
     const locale = params.locale
     const normalizedCallbackUrl = normalizeHrefWithLocale(pathname, locale)
     const loginHref = normalizeHrefWithLocale("/login", locale)
-    // const loginHref = '/en-US/games'
-
-
-    console.log({ locale, normalizedCallbackUrl, pathname })
+    const emailNotConfirmedHref = normalizeHrefWithLocale("/email-not-verified'", locale)
 
     if (!token) {
         redirect(`${loginHref}?callbackUrl=${encodeURIComponent(normalizedCallbackUrl)}`)
@@ -46,8 +43,8 @@ export default async function ProtectedLayout({
     }
 
     if (user?.verified === false) {
-        console.log('shall redirect to confirm email')
-        redirect('/email-not-verified')
+        console.error('shall redirect to confirm email')
+        redirect(emailNotConfirmedHref)
     }
 
     return <>{children}</>

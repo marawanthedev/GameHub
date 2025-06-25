@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import LogoutButton from './LogoutButton';
 import { cookies } from 'next/headers';
 import { JWT_SECRET } from '@/app/constants';
