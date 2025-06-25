@@ -6,6 +6,8 @@ import Image from 'next/image'
 import { useCartStore } from '../../../stores/cart'
 import { toast } from 'sonner'
 import { GTM_EVENTS, trackEvent } from '../../../lib/gtm'
+import { useLocale } from '@/app/hooks/useLocale'
+import { normalizeHrefWithLocale } from '@/app/util/normalizeHref'
 
 export default function CheckoutPage() {
     const [loading, setLoading] = useState(true)
@@ -13,11 +15,13 @@ export default function CheckoutPage() {
     const router = useRouter()
     const cartItems = useCartStore((state) => state.items)
     const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0)
+    const locale = useLocale()
 
     useEffect(() => {
+        const normalizedRedirectRoute = normalizeHrefWithLocale('/games', locale)
         if (cartItems.length === 0) {
             toast.error('Your cart is empty. Please add items before checking out.')
-            setTimeout(() => router.push('/games'), 1500)
+            setTimeout(() => router.push(normalizedRedirectRoute), 1500)
         }
 
         const timer = setTimeout(() => setLoading(false), 1500)

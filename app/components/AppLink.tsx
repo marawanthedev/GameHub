@@ -1,11 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { usePathname } from 'next/navigation'
 import { PropsWithChildren } from 'react'
 import { useLocale } from '../hooks/useLocale'
+import { useToastStore } from '../stores/toast'
 
 export default function AppLink<T>({
     href,
@@ -13,39 +14,37 @@ export default function AppLink<T>({
     ...props
 }: PropsWithChildren<T & { href: string }>) {
     const pathname = usePathname()
-    const toastIdRef = useRef<string | number | null>(null)
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-    const startTimeRef = useRef<number>(0)
-    const lastPathRef = useRef(pathname)
     const locale = useLocale()
 
-    function removeLoader() {
-        if (!toastIdRef.current) return
-        toast.dismiss(toastIdRef.current)
-        toastIdRef.current = null
-    }
+    const { toastId, startTime, setToast, clearToast } = useToastStore()
 
-    useEffect(() => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current)
-            timeoutRef.current = null
-        }
-
-        removeLoader()
-    }, [pathname])
+    const normalizedHref = href.startsWith('/')
+        ? href.startsWith(`/${locale}`) ? href : `/${locale}${href}`
+        : `/${locale}/${href}`
 
     const handleClick = () => {
-        if (lastPathRef.current === pathname) return
+        if (normalizedHref === pathname) return
 
-        const nextPageName = href !== '/' ? href.split('/')[1] : "landing"
-        startTimeRef.current = Date.now()
+        const nextPage = normalizedHref.split('/')[2] || 'home'
 
-        timeoutRef.current = setTimeout(() => {
-            toastIdRef.current = toast.loading(`Loading ${nextPageName} page...`)
-        }, 100)
+        const newToastId = toast.loading(`Loading ${nextPage} page...`)
+        setToast(newToastId, Date.now())
     }
 
-    const normalizedHref = href.startsWith(`/${locale}`) ? href : `/${locale}${href}`;
+    // Auto-dismiss toast when pathname changes
+    useEffect(() => {
+        if (toastId) {
+            const elapsed = Date.now() - startTime
+            const remaining = 300 - elapsed
+
+            const timeout = setTimeout(() => {
+                toast.dismiss(toastId)
+                clearToast()
+            }, Math.max(remaining, 0))
+
+            return () => clearTimeout(timeout)
+        }
+    }, [pathname])
 
     return (
         <Link
