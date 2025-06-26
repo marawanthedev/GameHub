@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma/client'
+import { DEFAULT_LOCALE } from '@/app/constants'
 
 export async function POST(req: NextRequest) {
     const { token } = await req.json()
+    const locale = req.headers.get('x-locale') ?? DEFAULT_LOCALE.value
 
     if (!token) {
         return NextResponse.json({ error: 'Token is required' }, { status: 400 })
@@ -24,5 +26,5 @@ export async function POST(req: NextRequest) {
     await prisma.verificationToken.delete({ where: { token } })
 
 
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/verified-success`)
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/${locale}/verified-success`)
 }

@@ -1,5 +1,7 @@
 'use client'
 
+import { useLocale } from '@/app/hooks/useLocale'
+import { normalizeHrefWithLocale } from '@/app/util/normalizeHref'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
@@ -10,6 +12,8 @@ export default function VerifyEmailPage() {
     const router = useRouter()
     // Prevents double fetch on dev (React Strict Mode)
     const hasFetched = useRef(false)
+    const locale = useLocale()
+    const loginNormalizedHref = normalizeHrefWithLocale('/login', locale)
 
     if (!token) {
         throw new Error('Couldnt find verification token')
@@ -24,13 +28,13 @@ export default function VerifyEmailPage() {
             try {
                 const res = await fetch(`/api/auth/verify-email`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'x-locale': locale },
                     body: JSON.stringify({ token }),
                 })
 
                 if (res.ok) {
                     setStatus('success')
-                    setTimeout(() => router.push('/login'), 1000)
+                    router.replace(loginNormalizedHref)
                 } else {
                     setStatus('error')
                 }
@@ -40,7 +44,7 @@ export default function VerifyEmailPage() {
         }
 
         verify()
-    }, [token, router])
+    }, [token, router, locale])
 
     return (
         <div className="min-h-screen flex items-center justify-center text-white">

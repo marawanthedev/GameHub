@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/app/lib/prisma/client'
-import { CLIENT_BASE_URL, JWT_SECRET } from '@/app/constants'
+import { CLIENT_BASE_URL, DEFAULT_LOCALE, JWT_SECRET } from '@/app/constants'
 import { ApiResponse, SuccessfulApiResponse } from '@/app/types/api'
 import { SignJWT } from 'jose'
 import { sendVerificationEmail } from '@/app/lib/email'
@@ -15,6 +15,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
         if (existing) {
             return NextResponse.json({ error: 'User already exists', success: false }, { status: 400 })
         }
+        const locale = req.headers.get('x-locale') ?? DEFAULT_LOCALE.value
 
         const hashed = await bcrypt.hash(password, 10)
         const user = await prisma.user.create({
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
         // no cookie setting as we need to verify email first 
 
         // Send verification email
-        const verificationLink = `${CLIENT_BASE_URL}/verify-email?token=${token}`
+        const verificationLink = `${CLIENT_BASE_URL}/${locale}/verify-email?token=${token}`
 
         await sendVerificationEmail(email, verificationLink)
 

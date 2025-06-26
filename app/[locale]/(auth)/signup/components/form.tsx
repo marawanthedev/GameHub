@@ -44,7 +44,7 @@ export default function SignUpForm({ locale }: { locale: string }) {
         try {
             const res = await fetch(`${API_BASE_URL}/auth/signup`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'x-locale': locale },
                 body: JSON.stringify({ email, password }),
             })
 
